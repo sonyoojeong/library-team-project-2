@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/mylayout}">
+
+<head>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+
+
+
+        function checkAll(){
+            /*alert('전체 선택 하기');*/
+            /*input 태그에서 [] cartChkBox라는 네임 속성이를 []안에 넣음 */
+            if($('#checkall').prop('checked')){
+                $('input[name="likeChkBox"]').prop('checked',true);
+            }else{
+            $('input[name="likeChkBox"]').prop('checked',false);
+            }
+
+
+
+        }
+
+       function AddComma(num){ /* 3자리마다 콤마 유형 넣기 */
+            var regexp = /\B(?=(\d{3})+(?!\d))/g;
+            return num.toString().replace(regexp, ',');
+        }
+
+
+
+
+
+
+function rents(){
+    /*alert('대여하기');*/
+    var myurl = '/like/rent';
+
+    var token = $('meta[name="_csrf"]').attr('content');
+    var header = $('meta[name="_csrf_header"]').attr('content');
+
+    var dataArray = new Array();  /* 배열 선언 */
+    var paramData = new Object(); /* 객체 선언 */
+
+    var checkList = $('input[name="likeChkBox"]:checked');
+    alert('대여할 상품 개수 : '  + checkList.length);
+    if(checkList.length == 0){
+        alert('대여할 상품을 한개 이상 선택해 주세요 :) ');
+        return ;
+    }
+
+    checkList.each(function(){
+        var likeBookId = $(this).val();
+        var data = new Object();
+        data['likeBookId'] = likeBookId;
+        dataArray.push(data);  /* 배열에 요소 추가 */
+    });
+
+    paramData['likeRentDtoList'] = dataArray;
+    var param = JSON.stringify(paramData);
+    console.log('param');
+    console.log(param);
+
+    $.ajax({
+        url: myurl,
+        type: 'POST',
+        contentType: 'application/json',
+        beforeSend: function(xhr){
+            xhr.setRequestHeader(header,token);
+        },
+        datatype: 'json',
+        data: param,
+        cache: false,
+        success: function(result, status){
+            alert('주문이 완료 되었습니다.');
+            location.href= '/rent';
+        },
+        error: function(xhr, status, error){
+            if(xhr.status == '401'){
+                alert('로그인 이후 이용해 주세요.');
+                location.href='/members/login';
+            } else{
+                alert(xhr.responseJSON.message);
+            }
+        }
+    });
+}
+
+
+
+
+
+    function deleteLikeBook(obj){
+            /*alert('삭제');*/
+
+        var likeBookId = obj.dataset.id;
+        var myurl = '/likeBook/' + likeBookId ;
+
+        var token = $('meta[name="_csrf"]').attr('content');
+        var header = $('meta[name="_csrf_header"]').attr('content');
+
+        $.ajax({
+            url:myurl,
+            type:'DELETE',
+            contentType:'application/json',
+            beforeSend:function(xhr){
+                xhr.setRequestHeader(header,token);
+            },
+            datatype:'json',
+            cache:false,
+            success:function(result, status){
+                location.href='/like';
+            },
+            error:function(xhr,status,error){
+                if(xhr.status == '401'){
+                    alert('로그인 이후 이용해 주세요.');
+                    location.href='/members/login';
+                }else{
+                    alert(xhr.responseJSON.message);
+                }
+            }
+
+        });
+    }
+
+
+
+    </script>
+</th:block>
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+  <style>
+        .content-margin{
+            margin-left:25%;
+            margin-right:25%;
+            margin-top:2%;
+            margin-bottom:100px;
+        }
+        .repImgDiv{
+            margin-right:15px;
+            margin-left:15px;
+            height:auto;
+        }
+        .repImg{
+            height:100px;
+            width:100px;
+        }
+        .fontSize18{
+            font-size:18px
+        }
+        .fontSize24{
+            font-size:24px
+        }
+    </style>
+
+</th:block>
+
+
+<div class="content content-margin" layout:fragment="content">
+  <h2>관심 목록</h2>
+  <div>
+    <table class="table">
+      <colgroup>
+        <col width="15%">
+        <col width="70%">
+        <col width="15%">
+      </colgroup>
+      <thead>
+      <tr class="text-center">
+        <td>
+          <input type="checkbox" id="checkall" onclick="checkAll()"> 전체 선택
+        </td>
+        <td>책 정보</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="bean : ${likeBooks}">
+        <td class="text-center align-middle">
+          <input type="checkbox" name="likeChkBox" th:value="${bean.likeBookId}">
+        </td>
+        <td class="d-flex"> <!-- for flexbox container in bootstrap-->
+          <div class="align-self-center repImgDiv" >
+            <img th:src="${bean.imageUrl}" class="rounded repImg" th:alt="${bean.bookName}">
+          </div>
+          <div class="align-self-center">
+            <span th:text="${bean.bookName}" class="font-weight-bold fontSize24"></span>
+            <div class="font-weight-light fontSize18">
+                                <span class="input-group">
+                                    <span th:id="${bean.likeBookId}"
+                                          class="align-self-center"></span>
+                                        &nbsp;
+
+                                  <!--this는 나 자신을 부름 input문장-->
+                                    <button type="button" class="close" aria-label="Close">
+                                        <span aria-hidden="true"
+                                              th:data-id="${bean.likeBookId}"
+                                              onclick="deleteLikeBook(this)">
+                                           &nbsp; &times;  <!-- 몇배 2배,3배 곱하기 기호-->
+                                        </span>
+                                    </button>
+                                </span>
+            </div>
+          </div>
+        </td>
+        <td class="text-center align-middle">
+
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+
+    <h2 class="text-center">
+      <button type="button" class="btn btn-primary btn-lg" onclick="rents()">
+        대여 하기
+      </button>
+    </h2>
+  </div>
+</div>
+</html>

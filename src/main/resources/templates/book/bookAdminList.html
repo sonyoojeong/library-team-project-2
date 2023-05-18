@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{common/mylayout}">
+
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        $(document).ready(function(){ /* 검색 button click */
+            $("#searchBtn").on("click",function(e) {
+                e.preventDefault();
+                page(0);
+            });
+        });
+
+        function page(page){
+            var searchDateType = $("#searchDateType").val();
+            var bookRentalStatus = $("#bookRentalStatus").val();
+            var searchBy = $("#searchBy").val();
+            var searchQuery = $("#searchQuery").val();
+
+            location.href="/admin/books/" + page + "?searchDateType=" + searchDateType
+            + "&bookRentalStatus=" + bookRentalStatus
+            + "&searchBy=" + searchBy
+            + "&searchQuery=" + searchQuery;
+        }
+
+        function checkAll(){
+            /*alert('전체 선택 하기');*/
+            /*input 태그에서 [] bookChkBox 네임 속성을 []안에 넣음 */
+            if($('#checkall').prop('checked')){
+                $('input[name="bookChkBox"]').prop('checked',true);
+            }else{
+            $('input[name="bookChkBox"]').prop('checked',false);
+            }
+
+        }
+
+
+function deleteBook() {
+
+  var checkList = $('input[name="bookChkBox"]:checked');
+
+  if (checkList.length === 0) {
+    alert('삭제할 항목을 선택해주세요.');
+    return;
+  }
+
+  var confirmDelete = confirm('선택한 항목을 삭제하시겠습니까?');
+  if (!confirmDelete) {
+    return;
+  }
+
+  checkList.each(function() {
+
+    var bookId = $(this).val();
+    var myurl = '/admin/books/' + bookId;
+
+
+    var token = $('meta[name="_csrf"]').attr('content');
+    var header = $('meta[name="_csrf_header"]').attr('content');
+
+    alert("url확인:"+myurl);
+    alert("bookId확인:"+bookId);
+    $.ajax({
+      url: myurl,
+      type: 'DELETE',
+      contentType: 'application/json',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(header, token);
+      },
+      dataType: 'json',
+      data: JSON.stringify(bookId),
+      cache: false,
+      success: function(result, status) {
+        location.href = '/admin/books';
+      },
+      error: function(xhr, status, error) {
+        if (xhr.status == '401') {
+          alert('로그인 이후 이용해 주세요.');
+          location.href = '/members/login';
+        } else {
+          alert(xhr.responseJSON.message);
+        }
+      }
+    });
+  });
+}
+
+
+    </script>
+</th:block>
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        select{
+            margin-right:10px;
+        }
+    </style>
+</th:block>
+
+
+<div class="content" layout:fragment="content">
+    <form th:action="@{'/admin/books/' + ${books.number}}" role="form" method="get" th:object="${books}">
+        <!-- /* 데이터 목록  */-->
+        <table class="table">
+            <thead>
+            <tr>
+                <td>
+                    <input type="checkbox" id="checkall" onclick="checkAll()"> 전체 선택
+                </td>
+
+                <td>도서명</td>
+                <td>상태</td>
+                <td>등록자</td>
+                <td>등록일</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="bean, status:${books.getContent()}">
+                <td class="text-center align-middle">
+                    <input type="checkbox" name="bookChkBox" th:value="${bean.bookId}">
+                </td>
+                <td>
+                    <a th:href="'/admin/book/'+ ${bean.bookId}" th:text="${bean.bookName}"></a>
+                </td>
+
+                <td th:text="${bean.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE ? '대여 가능' : '대여 불가' }"></td>
+
+                <td th:text="${bean.createdBy}"></td>
+                <td th:text="${bean.regDate}"></td>
+            </tr>
+
+            </tbody>
+
+        </table>
+
+            <div align="right">
+                <button class="w3-button w3-button" onclick="deleteBook()">삭제하기</button>
+            </div>
+            <!-- 삭제 처리를 위한 폼 요소들 -->
+
+        <!-- /* 페이지 네이션  */-->
+        <div th:with="start=${(books.number/maxPage)*maxPage + 1}, end=(${(books.totalPages == 0) ? 1 : (start + (maxPage - 1) < books.totalPages ? start + (maxPage - 1) : books.totalPages)})" >
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${books.first}?'disabled'">
+                    <a th:onclick="'javascript:page(' + ${books.number - 1} + ')'" aria-label='Previous' class="page-link">
+                        <span aria-hidden='true'>Previous</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${books.number eq page-1}?'active':''">
+                    <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
+                </li>
+                <li class="page-item" th:classappend="${books.last}?'disabled'">
+                    <a th:onclick="'javascript:page(' + ${books.number + 1} + ')'" aria-label='Next' class="page-link">
+                        <span aria-hidden='true'>Next</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- /* 필드 검색  */-->
+        <div class="form-inline justify-content-center" th:object="${searchDto}">  <!--bookcontroller 에서 bookManage 메소드에서 searchDto 가져옴-->
+            <select th:field="*{searchDateType}" class="form-control" style="width:auto;">
+                <option value="all">전체 기간</option>
+                <option value="1d">1일</option>
+                <option value="1w">1주</option>
+                <option value="1m">1달</option>
+                <option value="6m">6달</option>
+            </select>
+
+            <select th:field="*{bookRentalStatus}" class="form-control" style="width:auto;">
+                <option value="">전체 보기</option>
+                <option value="POSSIBLE">대출가능</option>
+                <option value="IMPOSSIBLE">대출중</option>
+            </select>
+
+            <select th:field="*{searchBy}" class="form-control" style="width:auto;">
+                <option value="bookName">도서명</option>
+                <option value="author">저자</option>
+            </select>
+            <input th:field="*{searchQuery}" class="form-control" type="text" placeholder="검색어를 입력해 주세요.">
+            <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
+        </div>
+
+    </form>
+
+</div>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/mylayout}">
+
+
+<div class="content" layout:fragment="content">
+    <script th:inline="javascript">
+
+        $(document).ready(function(){ /* 검색 button click */
+            $("#searchBtn").on("click",function(e) {
+                e.preventDefault();
+                page(0);
+            });
+        });
+
+        function page(page){
+            var searchDateType = $("#searchDateType").val();
+            var bookRentalStatus = $("#bookRentalStatus").val();
+            var searchBy = $("#searchBy").val();
+            var searchQuery = $("#searchQuery").val();
+
+            location.href="/books/list/" + page + "?searchDateType=" + searchDateType
+            + "&bookRentalStatus=" + bookRentalStatus
+            + "&searchBy=" + searchBy
+            + "&searchQuery=" + searchQuery;
+        }
+
+    </script>
+
+
+
+    <div class="column" style="display: flex; justify-content: center;">
+        <th:block th:each="bean, status: ${booklists.getContent()}">
+            <div style="display: flex; justify-content: space-between;">
+                <a th:href="'/book/' + ${bean.id}" class="text-dark">
+                    <img th:src="${bean.imageUrl}" class="card-img-top" th:alt="${bean.bookName}" height="200" width="200">
+                </a>
+                <div style="width: 90%;">
+                    <h4>[[${bean.bookName}]]</h4>
+                    <p>[[${bean.author}]]</p>
+                    <p>[[${bean.bookPublisher}]]</p>
+                    <p>[[${bean.description}]]</p>
+                    <hr/>
+                </div>
+            </div>
+        </th:block>
+    </div>
+
+
+
+    <br><br><br><br>
+
+    <!-- /* 페이지 네이션  */-->
+    <div th:with="start=${(booklists.number/maxPage)*maxPage + 1}, end=(${(booklists.totalPages == 0) ? 1 : (start + (maxPage - 1) < booklists.totalPages ? start + (maxPage - 1) : booklists.totalPages)})" >
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${booklists.first}?'disabled'">
+                <a th:onclick="'javascript:page(' + ${booklists.number - 1} + ')'" aria-label='Previous' class="page-link">
+                    <span aria-hidden='true'>Previous</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${booklists.number eq page-1}?'active':''">
+                <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
+            </li>
+            <li class="page-item" th:classappend="${booklists.last}?'disabled'">
+                <a th:onclick="'javascript:page(' + ${booklists.number + 1} + ')'" aria-label='Next' class="page-link">
+                    <span aria-hidden='true'>Next</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- /* 필드 검색  */-->
+    <div class="form-inline justify-content-center" th:object="${searchDto}">  <!--bookcontroller 에서 bookManage 메소드에서 searchDto 가져옴-->
+        <select th:field="*{searchDateType}" class="form-control" style="width:auto;">
+            <option value="all">전체 기간</option>
+            <option value="1d">1일</option>
+            <option value="1w">1주</option>
+            <option value="1m">1달</option>
+            <option value="6m">6달</option>
+        </select>
+
+        <select th:field="*{bookRentalStatus}" class="form-control" style="width:auto;">
+            <option value="">전체 보기</option>
+            <option value="POSSIBLE">대출가능</option>
+            <option value="IMPOSSIBLE">대출중</option>
+        </select>
+
+        <select th:field="*{searchBy}" class="form-control" style="width:auto;">
+            <option value="bookName">도서명</option>
+            <option value="author">저자</option>
+        </select>
+        <input th:field="*{searchQuery}" class="form-control" type="text" placeholder="검색어를 입력해 주세요.">
+        <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
+    </div>
+    </form>
+</div>
+
+</div>
+
+
+</html>

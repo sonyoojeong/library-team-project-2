@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/mylayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<div class="content" layout:fragment="content">
+<body>
+<h1>도서검색</h1>
+<input id="bookName" value="" type="text">
+<button id="search">검색</button>
+
+<p></p>
+<script src="https://code.jquery.com/jquery-3.7.0.js"
+  integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+  crossorigin="anonymous"></script>
+<script>
+
+$(document).ready(function() {
+    $("#search").click(function(){
+        $.ajax({
+            method: "GET",
+            url: "https://dapi.kakao.com/v3/search/book?target=title",
+            data: { query:$("#bookName").val() },
+            headers: {Authorization: "KakaoAK e14cc28209568378bca2acecc56c1800"}
+        })
+        .done(function( msg ) {
+            console.log(msg.documents[0].title);
+            console.log(msg.documents[0].thumbnail);
+            $( "p" ).append( "<strong>"+msg.documents[0].title+"</strong>" );
+            $( "p" ).append( "<img src ='"+msg.documents[0].thumbnail+"'/>" );
+        });
+    });
+});
+
+
+</script>
+
+
+
+
+
+</body>
+</html>
