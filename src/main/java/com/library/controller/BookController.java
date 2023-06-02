@@ -83,7 +83,7 @@ private final BookImageService bookImageService;
 
     @GetMapping(value = {"/books/list","/books/list/{page}"})
     public String bookList(BookSearchDto dto, @PathVariable("page") Optional<Integer> page, Model model){
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,10);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,6);
 
         if(dto.getSearchQuery() == null){
             dto.setSearchQuery("");

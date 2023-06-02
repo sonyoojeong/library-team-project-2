@@ -9,6 +9,8 @@
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 
+
+
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
   <script th:inline="javascript">
@@ -49,7 +51,7 @@ function rents(){
     var paramData = new Object(); /* 객체 선언 */
 
     var checkList = $('input[name="likeChkBox"]:checked');
-    alert('대여할 상품 개수 : '  + checkList.length);
+    alert('대여할 책 권수 : '  + checkList.length + '권');
     if(checkList.length == 0){
         alert('대여할 상품을 한개 이상 선택해 주세요 :) ');
         return ;
@@ -78,8 +80,8 @@ function rents(){
         data: param,
         cache: false,
         success: function(result, status){
-            alert('주문이 완료 되었습니다.');
-            location.href= '/rent';
+            alert('대여가 완료 되었습니다.');
+            location.href= '/rents';
         },
         error: function(xhr, status, error){
             if(xhr.status == '401'){
@@ -138,8 +140,8 @@ function rents(){
 <th:block layout:fragment="css">
   <style>
         .content-margin{
-            margin-left:25%;
-            margin-right:25%;
+            margin-left:10%;
+            margin-right:10%;
             margin-top:2%;
             margin-bottom:100px;
         }
@@ -167,11 +169,7 @@ function rents(){
   <h2>관심 목록</h2>
   <div>
     <table class="table">
-      <colgroup>
-        <col width="15%">
-        <col width="70%">
-        <col width="15%">
-      </colgroup>
+
       <thead>
       <tr class="text-center">
         <td>
@@ -196,6 +194,11 @@ function rents(){
                                     <span th:id="${bean.likeBookId}"
                                           class="align-self-center"></span>
                                         &nbsp;
+                    <input type="hidden" name="count"
+                           th:id="'count_' + ${bean.likeBookId}"
+                           th:value="${bean.count}"
+                           min="1"
+                           class="form-control">
 
                                   <!--this는 나 자신을 부름 input문장-->
                                     <button type="button" class="close" aria-label="Close">
@@ -206,6 +209,7 @@ function rents(){
                                         </span>
                                     </button>
                                 </span>
+
             </div>
           </div>
         </td>
@@ -224,4 +228,5 @@ function rents(){
     </h2>
   </div>
 </div>
+
 </html>

@@ -12,6 +12,6 @@ public class LikeBookDto {
     @NotNull
     private Long BookId;
 
-    @Min(value = 1,message = "수량은 최소 1개 입니다.")
+  @Min(value = 1,message = "수량은 최소 1개 입니다.")
     private int count;
 }

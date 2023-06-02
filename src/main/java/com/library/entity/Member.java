@@ -3,12 +3,14 @@ package com.library.entity;
 
 import com.library.constant.Role;
 import com.library.dto.MemberFormDto;
+import com.library.dto.MemberUpdateDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -64,6 +66,30 @@ public class Member {
         member.setRole(Role.USER);
 
         return member;
-
     }
+
+    public static Member updateMember(@Valid MemberUpdateDto memberFormDto,
+                                      PasswordEncoder passwordEncoder,
+                                      Member existingMember) {
+        existingMember.setName(memberFormDto.getName());
+        existingMember.setEmail(memberFormDto.getEmail());
+        existingMember.setBirth(memberFormDto.getBirth());
+        existingMember.setPhone(memberFormDto.getPhone());
+        existingMember.setAddress(memberFormDto.getAddress());
+
+        // 비밀번호 업데이트
+        if (memberFormDto.getPassword() != null) {
+            String password = passwordEncoder.encode(memberFormDto.getPassword());
+            existingMember.setPassword(password);
+        }
+
+        // 역할 업데이트 (필요한 경우)
+        // existingMember.setRole(Role.USER);
+
+        return existingMember;
+    }
+
+
+
+
 }

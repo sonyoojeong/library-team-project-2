@@ -38,7 +38,9 @@ public class Rent extends ServiceTime {
 
     @OneToMany(mappedBy = "rent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RentBook> rentBooks
-            = new ArrayList<>();
+            = new ArrayList<RentBook>();
+
+
 
 
     public static Rent createRent(Member member, List<RentBook> rentBookList) {
@@ -49,7 +51,7 @@ public class Rent extends ServiceTime {
             rent.addRentBook(bean);
         }
         rent.setRentStatus(RentStatus.RENT);
-        rent.setStartDate(LocalDateTime.now());
+        rent.setRentDate(LocalDateTime.now());
         return rent;
     }
 

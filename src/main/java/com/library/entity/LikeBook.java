@@ -15,6 +15,7 @@ public class LikeBook extends SaveBy{
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long likeBookId;
 
+    private int count; // 구매 개수
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "like_id")
@@ -25,10 +26,12 @@ public class LikeBook extends SaveBy{
     @JoinColumn(name = "book_id")
     private Book book;
 
-    public static LikeBook createLikeBook(Like like,Book book){
+    public static LikeBook createLikeBook(Like like,Book book,int count
+    ){
         LikeBook likeBook = new LikeBook();
         likeBook.setLike(like);
         likeBook.setBook(book);
+        likeBook.setCount(count);
 
 
         return likeBook;

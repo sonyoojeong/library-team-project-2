@@ -27,22 +27,23 @@
         }
 
     </script>
-
-
-
     <div class="column" style="display: flex; justify-content: center;">
         <th:block th:each="bean, status: ${booklists.getContent()}">
-            <div style="display: flex; justify-content: space-between;">
+            <div style="display: flex; flex-direction: column; align-items: center; border: 2px solid #ccc; border-radius: 8px; padding: 10px; margin: 10px; width: 200px;">
                 <a th:href="'/book/' + ${bean.id}" class="text-dark">
-                    <img th:src="${bean.imageUrl}" class="card-img-top" th:alt="${bean.bookName}" height="200" width="200">
+                    <div style="text-align: center;">
+                        <img th:src="${bean.imageUrl}" class="card-img-top" th:alt="${bean.bookName}" height="200" width="200" style="margin-bottom: 10px;">
+                    </div>
                 </a>
-                <div style="width: 90%;">
-                    <h4>[[${bean.bookName}]]</h4>
-                    <p>[[${bean.author}]]</p>
-                    <p>[[${bean.bookPublisher}]]</p>
-                    <p>[[${bean.description}]]</p>
-                    <hr/>
+
+                <div style="text-align: center;">
+                    <h4 style="margin-bottom: 5px;">[[${bean.bookName}]]</h4>
+                    <p style="margin-bottom: 5px;">[[${bean.author}]]</p>
+                    <p style="margin-bottom: 5px;">[[${bean.bookPublisher}]]</p>
+                    <p style="margin-bottom: 5px;">[[${bean.rentStatus}]]</p>
                 </div>
+
+                <hr style="margin-top: 10px; margin-bottom: 0;">
             </div>
         </th:block>
     </div>

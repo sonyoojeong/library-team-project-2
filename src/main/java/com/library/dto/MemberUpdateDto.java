@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter @Setter
-public class MemberFormDto {
+public class MemberUpdateDto {
     @NotBlank(message = "이름은 필수 입력 값입니다.")
     private String name;
 

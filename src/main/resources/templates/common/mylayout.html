@@ -27,4 +27,35 @@
 
 </body>
 
+<script src="https://code.jquery.com/jquery-3.7.0.js"
+        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+        crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function() {
+        $("#search").click(function(){
+            $.ajax({
+                method: "GET",
+                url: "https://dapi.kakao.com/v3/search/book?target=title",
+                data: { query:$("#bookName").val() },
+                headers: {Authorization: "KakaoAK e14cc28209568378bca2acecc56c1800"}
+            })
+            .done(function (msg) {
+                const bookList = $("#book-list");
+                for(let i = 0; i < 3; i++) {
+                    const book = msg.documents[i];
+                    const li = $("<li></li>");
+                    const title = $("<h2></h2>").text(book.title);
+                    const thumbnail = $("<img>").attr("src", book.thumbnail);
+                    thumbnail.click(function() {
+                        window.location.href = book.url;
+                    });
+                    li.append(title);
+                    li.append(thumbnail);
+                    bookList.append(li);
+                }
+            });
+        });
+    });
+</script>
+
 </html>

@@ -31,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .mvcMatchers("/", "/members/**", "/products/**", "/images/**", "/thymeleaf/**").permitAll()
                 .mvcMatchers("/admin/**").hasRole("ADMIN")
+                .mvcMatchers("/members/withdraw").authenticated() // 탈퇴 기능 접근 권한 설정
                 .anyRequest().authenticated() ;
 
         http.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint()) ;

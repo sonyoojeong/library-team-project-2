@@ -1,5 +1,6 @@
 package com.library.dto;
 
+import com.library.constant.RentStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ public class BookListDto {
     private String imageUrl;
     private String bookPublisher;
     private String description;
+    private RentStatus rentStatus;
 
 
 
