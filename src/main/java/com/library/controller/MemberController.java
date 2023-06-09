@@ -1,6 +1,7 @@
 package com.library.controller;
 
 import com.library.dto.MemberFormDto;
+import com.library.dto.MemberUpdateDto;
 import com.library.dto.MyPageDto;
 import com.library.entity.Member;
 import com.library.repository.MemberRepository;
@@ -32,6 +33,7 @@ public class MemberController {
     private final MemberRepository memberRepository;
     private final RentBookRepository rentBookRepository;
 
+
     @PostMapping("/sign_up")
     public String newMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -58,46 +60,32 @@ public class MemberController {
     }
 
 
-/*    @PostMapping(value = "/member/update")
-    public String memberUpdate(@Valid MemberFormDto dto, BindingResult error, Model model){
-
-        String whenError = "/member/memberUpdateForm";
-        if(error.hasErrors()){
-            return whenError;
-        }
-
-        try {
-            memberService.updateMember(dto);
-        }catch (Exception err){
-            model.addAttribute("errorMessage","회원 수정 중에 오류가 발생하였습니다.");
-            err.printStackTrace();
-            return whenError;
-        }
-        return "redirect:/";
-
-
-    }*/
-
-/*    @GetMapping(value = "/update")
-    public String updateForm(Model model){
-        String myEmail = (String) session.getAttribute("Email");
-        MemberFormDto memberFormDto = memberService.updateForm(myEmail);
-        model.addAttribute("updateMember", memberFormDto);
-
-        return "member/memberUpdateForm";
-    } */
-
-   @GetMapping(value = "/update")
-   public String updateForm(){
-
-       return "member/memberUpdateForm";
-   }
-
-    @PostMapping(value = "/update/{memberId}")
-    public String update(@ModelAttribute MemberFormDto memberFormDto, PasswordEncoder passwordEncoder){
-        memberService.updateMember(memberFormDto,passwordEncoder);
-        return "redirect:/members/" + memberFormDto.getMemberId();
+    @GetMapping("/update")
+    public String memberUpdateForm(Model model) {
+        model.addAttribute("memberUpdateDto", new MemberUpdateDto());
+        return "/member/memberUpdateForm";
     }
+
+    @PostMapping("/update")
+    public String updateMember(@Valid MemberUpdateDto memberUpdateDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "/member/memberUpdateForm";
+        }
+        try {
+            Member existingMember = memberService.findMemberByEmail(memberUpdateDto.getEmail());
+            if (existingMember == null) {
+                throw new IllegalStateException("해당 회원을 찾을 수 없습니다.");
+            }
+            Member updatedMember = Member.updateMember(memberUpdateDto, passwordEncoder, existingMember);
+            memberService.saveMember(updatedMember);
+        } catch (IllegalStateException e) {
+            model.addAttribute("errMessage", e.getMessage());
+            return "/member/memberUpdateForm";
+        }
+        System.out.println("회원 정보 업데이트 요청 들어옴");
+        return "redirect:/";
+    }
+
 
 
 
