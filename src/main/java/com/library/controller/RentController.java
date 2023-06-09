@@ -57,7 +57,21 @@ public class RentController {
         model.addAttribute("page",pageable.getPageNumber());
         model.addAttribute("maxPage",5);
 
-        return "rent/rentHist";
+        return "/rent/rentHist";
+    }
+
+    @PostMapping(value = "/rents/{rentId}/cancel")
+    public @ResponseBody ResponseEntity cancelRent(@PathVariable("rentId") Long rentId, Principal principal){
+        System.out.println("테스트 컨ㅌ1");
+        String email =principal.getName();
+        if(rentService.validateRent(rentId,email)){
+            rentService.cancelRent(rentId);
+            System.out.println("테스트 컨트롤러");
+            return new ResponseEntity<Long>(rentId,HttpStatus.OK);
+
+        }else{
+            return new ResponseEntity<String>("대여 취소 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
     }
 
 }

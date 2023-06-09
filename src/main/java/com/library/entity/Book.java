@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name="books")
@@ -60,7 +61,8 @@ public class Book extends SaveBy {
 
     private String callNumber;
 
-
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
+    private List<BookImage> bookImages;
 
     public void updateBook(BookDto bookDto) {
         this.bookId = bookDto.getBookId();
@@ -87,7 +89,7 @@ public class Book extends SaveBy {
         int restStock = this.stock - vstock;
 
         if(restStock <0){  //재고 부족
-            String message = "현재 대여 가능한 도서가 없습니다. (현재 대여 가능한 도서수 : " + this.stock + "개)";
+            String message = "상품의 재고가 부족합니다. (현재 재고 수량 : " + this.stock + "개)";
             throw new OutOfStockException(message);
         }
         this.stock = restStock;
@@ -98,5 +100,6 @@ public class Book extends SaveBy {
         this.stock += vstock;
 
     }
+
 
 }

@@ -4,6 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/mylayout}">
 
+
 <head>
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -166,6 +167,7 @@ function rents(){
 
 
 <div class="content content-margin" layout:fragment="content">
+  <br><br><br><br>
   <h2>관심 목록</h2>
   <div>
     <table class="table">
@@ -189,11 +191,16 @@ function rents(){
           </div>
           <div class="align-self-center">
             <span th:text="${bean.bookName}" class="font-weight-bold fontSize24"></span>
+            <br>
+            출판사: <span th:text="${bean.publisher}" class="font-weight-bold fontSize18"></span>
+            <br>
+            저자: <span th:text="${bean.author}" class="font-weight-bold fontSize18"></span>
             <div class="font-weight-light fontSize18">
                                 <span class="input-group">
                                     <span th:id="${bean.likeBookId}"
                                           class="align-self-center"></span>
-                                        &nbsp;
+
+                          &nbsp;
                     <input type="hidden" name="count"
                            th:id="'count_' + ${bean.likeBookId}"
                            th:value="${bean.count}"
@@ -221,7 +228,7 @@ function rents(){
     </table>
 
 
-    <h2 class="text-center">
+    <h2 class="text-left">
       <button type="button" class="btn btn-primary btn-lg" onclick="rents()">
         대여 하기
       </button>

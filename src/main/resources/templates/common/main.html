@@ -1,99 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/mylayout}">>
-<head>
+      layout:decorate="~{common/mylayout}">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+<!--사용자 정의 자바스크립트 추가-->
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+        $(document).ready(function(){
+            var errorMessage = [[${errMessage}]];
+            if(errorMessage != null){
+                alert(errorMessage);
+            }
+        });
 
 
-  <title>CSS Template</title>
-  <meta charset="utf-8">
+    </script>
 
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-* {
-  box-sizing: border-box;
-}
+</th:block>
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Style the header */
-.header {
-  background-color: #f1f1f1;
-  padding: 30px;
-  text-align: center;
-  font-size: 35px;
-}
-
-/* Create three unequal columns that floats next to each other */
-.column {
-  float: left;
-  padding: 10px;
-  height: 300px; /* Should be removed. Only for demonstration */
-}
-
-/* Left and right column */
-.column.side {
-  width: 25%;
-}
-
-/* Middle column */
-.column.middle {
-  width: 50%;
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-/* Style the footer */
-.footer {
-  background-color: #f1f1f1;
-  padding: 10px;
-  text-align: center;
-}
-
-/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
-@media (max-width: 600px) {
-  .column.side, .column.middle {
-    width: 100%;
-  }
-}
-</style>
-</head>
 <body>
-
 <div class="content" layout:fragment="content">
 
 
+  <!-- 슬라이드 -->
+  <div class="book-store">
+    <div class="book-slide">
+      <div class="book js-flickity flickity-enabled is-draggable" data-flickity-options='{ "wrapAround": true }'>
 
-<div class="header">
-  <h2>신작 추천</h2>
-</div>
 
-<div class="row">
-  <div class="column side" style="background-color:#aaa;">Column</div>
-  <div class="column middle" style="background-color:#bbb;">Column</div>
-  <div class="column side" style="background-color:#ccc;">Column</div>
-</div>
+        <div class="flickity-viewport">
+          <div class="flickity-slider">
+            <div class="book-cell is-selected">
+              <div class="book-img">
+                <img src="https://images-na.ssl-images-amazon.com/images/I/81WcnNQ-TBL.jpg" alt="" class="book-photo">
+              </div>
+              <div class="book-content">
+                <div class="book-title">BIG MAGIC</div>
+                <div class="book-author">by Elizabeth Gilbert</div>
+                <div class="book-sum">Readers of all ages and walks of life have drawn inspiration and empowerment from Elizabeth Gilbert’s books for years. </div>
+                <div class="book-see">See The Book</div>
+              </div>
+            </div>
 
-<div class="footer">
-  <p>자료 검색</p>
-  <form class="form-inline justify-content-center my-2 my-lg-0" th:action="@{/}" method="get">
-    <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-  </form>
-</div>
-<br><br><br><br>
-</div>
+            <div class="book-cell">
+              <div class="book-img">
+                <img src="https://i.pinimg.com/originals/a8/b9/ff/a8b9ff74ed0f3efd97e09a7a0447f892.jpg" alt="" class="book-photo">
+              </div>
+              <div class="book-content">
+                <div class="book-title">Ten Thousand Skies Above You</div>
+                <div class="book-author">by Claudia Gray</div>
+                <div class="book-sum">The hunt for each splinter of Paul's soul sends Marguerite racing through a war-torn San Francisco.</div>
+                <div class="book-see book-blue">See The Book</div>
+              </div>
+            </div>
+
+            <div class="book-cell">
+              <div class="book-img">
+                <img src="https://www.abebooks.com/blog/wp-content/uploads/2016/08/10.jpg" alt="" class="book-photo">
+              </div>
+              <div class="book-content">
+                <div class="book-title">A Tale For The Time Being</div>
+                <div class="book-author">by Ruth Ozeki</div>
+                <div class="book-sum">In Tokyo, sixteen-year-old Nao has decided there’s only one escape from her aching loneliness and her classmates’ bullying.</div>
+                <div class="book-see book-pink">See The Book</div>
+              </div>
+            </div>
+
+            <div class="book-cell">
+              <div class="book-img">
+                <img src="https://images-na.ssl-images-amazon.com/images/I/81af+MCATTL.jpg" alt="" class="book-photo">
+              </div>
+              <div class="book-content">
+                <div class="book-title">The Great Gatsby</div>
+                <div class="book-author">by F.Scott Fitzgerald</div>
+                <div class="book-sum">The Great Gatsby, F. Scott Fitzgerald’s third book, stands as the supreme achievement of his career.</div>
+                <div class="book-see book-yellow">See The Book</div>
+              </div>
+            </div>
+
+            <div class="book-cell">
+              <div class="book-img">
+                <img src="https://images-na.ssl-images-amazon.com/images/I/81UWB7oUZ0L.jpg" alt="" class="book-photo">
+              </div>
+              <div class="book-content">
+                <div class="book-title">After You</div>
+                <div class="book-author">by Jojo Moyes</div>
+                <div class="book-sum">Louisa Clark is no longer just an ordinary girl living an ordinary life. After the transformative six months spent.</div>
+                <div class="book-see book-purple">See The Book</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ol class="flickity-page-dots">
+          <li class="dot"></li>
+          <li class="dot is-selected"></li>
+          <li class="dot"></li>
+          <li class="dot"></li>
+          <li class="dot"></li>
+        </ol>
+        <button class="flickity-prev-next-button previous" type="button">
+          <svg viewBox="0 0 100 100">
+            <path d="M 50,0 L 60,10 L 20,50 L 60,90 L 50,100 L 0,50 Z" class="arrow" transform="translate(15, 0)"></path>
+          </svg>
+        </button>
+        <button class="flickity-prev-next-button next" type="button">
+          <svg viewBox="0 0 100 100">
+            <path d="M 50,0 L 60,10 L 20,50 L 60,90 L 50,100 L 0,50 Z" class="arrow" transform="translate(85, 100) rotate(180)"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="main-wrapper">
+      <div class="search-box">
+        <h2 class="search-title">자료 검색</h2>
+        <form class="form-inline justify-content-center my-2 my-lg-0" th:action="@{/}" method="get">
+          <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+
+
+
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+<!-- Link to page
+==================================================
+  <a href="https://front.codes/" class="logo" target="_blank">
+      <img src="https://assets.codepen.io/1462889/fcy.png" alt="">
+  </a> -->
+
 </body>
-
-
 </html>
