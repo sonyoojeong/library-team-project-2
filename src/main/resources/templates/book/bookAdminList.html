@@ -4,6 +4,9 @@
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{common/mylayout}">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+
 
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
@@ -15,6 +18,10 @@
                 page(0);
             });
         });
+
+
+
+
 
         function page(page){
             var searchDateType = $("#searchDateType").val();
@@ -40,59 +47,11 @@
         }
 
 
-function deleteBook() {
 
-  var checkList = $('input[name="bookChkBox"]:checked');
+</script>
 
-  if (checkList.length === 0) {
-    alert('삭제할 항목을 선택해주세요.');
-    return;
-  }
-
-  var confirmDelete = confirm('선택한 항목을 삭제하시겠습니까?');
-  if (!confirmDelete) {
-    return;
-  }
-
-  checkList.each(function() {
-
-    var bookId = $(this).val();
-    var myurl = '/admin/books/' + bookId;
-
-
-    var token = $('meta[name="_csrf"]').attr('content');
-    var header = $('meta[name="_csrf_header"]').attr('content');
-
-    alert("url확인:"+myurl);
-    alert("bookId확인:"+bookId);
-    $.ajax({
-      url: myurl,
-      type: 'DELETE',
-      contentType: 'application/json',
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader(header, token);
-      },
-      dataType: 'json',
-      data: JSON.stringify(bookId),
-      cache: false,
-      success: function(result, status) {
-        location.href = '/admin/books';
-      },
-      error: function(xhr, status, error) {
-        if (xhr.status == '401') {
-          alert('로그인 이후 이용해 주세요.');
-          location.href = '/members/login';
-        } else {
-          alert(xhr.responseJSON.message);
-        }
-      }
-    });
-  });
-}
-
-
-    </script>
 </th:block>
+
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
@@ -115,9 +74,11 @@ function deleteBook() {
                 </td>
 
                 <td>도서명</td>
+                <td>isbn</td>
                 <td>상태</td>
                 <td>등록자</td>
                 <td>등록일</td>
+                <td>삭제</td>
             </tr>
             </thead>
             <tbody>
@@ -128,23 +89,99 @@ function deleteBook() {
                 <td>
                     <a th:href="'/admin/book/'+ ${bean.bookId}" th:text="${bean.bookName}"></a>
                 </td>
+                <td th:text="${bean.isbn}"></td>
 
                 <td th:text="${bean.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE ? '대여 가능' : '대여 불가' }"></td>
 
                 <td th:text="${bean.createdBy}"></td>
-                <td th:text="${bean.regDate}"></td>
+                <td th:text="${#temporals.format(bean.regDate, 'yyyy-MM-dd')}"></td>
+                <td>
+
+
+                    <button id="deleteBtn" type="button">
+                        <a th:href="@{|/admin/books/delete/${bean.bookId}|}">삭제</a>
+                    </button>
+
+                </td>
+
             </tr>
 
             </tbody>
 
         </table>
 
-            <div align="right">
-                <button class="w3-button w3-button" onclick="deleteBook()">삭제하기</button>
-            </div>
-            <!-- 삭제 처리를 위한 폼 요소들 -->
+<script>
+            $(document).ready(function() {
+          $("#deleteBtn").on("click",function(event) {
+                var confirmDelete = confirm('선택한 항목을 삭제하시겠습니까?');
+                if (!confirmDelete) {
+                  event.preventDefault();
+                }
+          });
+        });
 
-        <!-- /* 페이지 네이션  */-->
+</script>
+
+
+       <!--<form th:action="@{'/admin/books/delete/' + ${bookId}}" method="post">-->
+        <h5 class="text-right">
+            <button class="btn btn-primary btn-lg" onclick="deleteBook()">삭제하기</button>
+        </h5>
+
+
+        <script>
+             function deleteBook() {
+                var checkList = $('input[name="bookChkBox"]:checked');
+
+                if (checkList.length === 0) {
+                    alert('삭제할 항목을 선택해주세요.');
+                    return;
+                }
+
+                var confirmDelete = confirm('선택한 항목을 삭제하시겠습니까?');
+                if (!confirmDelete) {
+                    return;
+                }
+
+                var dataArray = new Array();
+                var myurl = '/admin/books/checkDelete/';
+
+                checkList.each(function() {
+                    var bookId = $(this).val();
+                    dataArray.push(bookId);
+                });
+
+                var token = $('meta[name="_csrf"]').attr('content');
+                var header = $('meta[name="_csrf_header"]').attr('content');
+
+                for (var i = 0; i < dataArray.length; i++) {
+                    $.ajax({
+                        url: myurl + dataArray[i],
+                        type: 'DELETE',
+                        contentType: 'application/json',
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader(header, token);
+                        },
+                        dataType: 'json',
+                        cache: false,
+                        success: function(result, status) {
+                            location.href = '/book/bookAdminList';
+                        },
+                        error: function(xhr, status, error) {
+                            if (xhr.status == '401') {
+                                alert('로그인 이후 이용해 주세요.');
+                                location.href = '/members/login';
+                            } else {
+                                alert(xhr.responseJSON.message);
+                            }
+                        }
+                    });
+                }
+            }
+        </script>
+
+
+         <!-- /* 페이지 네이션  */-->
         <div th:with="start=${(books.number/maxPage)*maxPage + 1}, end=(${(books.totalPages == 0) ? 1 : (start + (maxPage - 1) < books.totalPages ? start + (maxPage - 1) : books.totalPages)})" >
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${books.first}?'disabled'">

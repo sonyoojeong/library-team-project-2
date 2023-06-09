@@ -11,6 +11,7 @@ public interface BookRepository extends JpaRepository<Book,Long>, QuerydslPredic
     // 상품의 이름으로 조회하여 목록을 반환받기
     List<Book> findBookByBookName(String bookName);
 
+    void deleteById(Long bookId);
 
 
 }

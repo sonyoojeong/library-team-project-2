@@ -20,8 +20,8 @@ public class BookImage extends SaveBy{
     private String imageUrl;    //이미지 경로
     private String repImageYesNo;   //대표 이미지 여부
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "book_id", referencedColumnName = "book_id")
     private Book book;
 
 

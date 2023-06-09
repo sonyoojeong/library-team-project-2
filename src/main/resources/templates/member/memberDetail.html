@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{common/mylayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 상세정보</title>
+    <style>
+        body {
+            background-color: #f8f8f8;
+            font-family: Arial, sans-serif;
+        }
+        .content {
+            margin: 50px auto;
+            width: 80%;
+            max-width: 1000px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="content" layout:fragment="content">
+    <h2>회원 상세정보</h2>
+    <table>
+        <tr>
+            <th>아이디</th>
+            <th>이메일</th>
+            <th>비밀번호</th>
+            <th>이름</th>
+        </tr>
+        <tr>
+            <td th:text="${member.memberId}"></td>
+            <td th:text="${member.email}"></td>
+            <td th:text="${member.password}"></td>
+            <td th:text="${member.name}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

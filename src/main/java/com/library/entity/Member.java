@@ -66,6 +66,7 @@ public class Member {
         member.setRole(Role.USER);
 
         return member;
+
     }
 
     public static Member updateMember(@Valid MemberUpdateDto memberFormDto,
@@ -88,8 +89,4 @@ public class Member {
 
         return existingMember;
     }
-
-
-
-
 }

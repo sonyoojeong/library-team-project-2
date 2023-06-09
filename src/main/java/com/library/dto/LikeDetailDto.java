@@ -9,14 +9,18 @@ public class LikeDetailDto {
     private String bookName; //책이름
     private int count;  //구매하고자 하는 수량
     private String imageUrl; // 책 이미지 경로
+    private String publisher;
+    private String author;
 
 
 
-    public LikeDetailDto(Long likeBookId, String bookName,int count, String imageUrl){
+    public LikeDetailDto(Long likeBookId, String bookName,int count, String imageUrl,String publisher, String author){
         this.likeBookId = likeBookId;
         this.bookName = bookName;
         this.count=count;
         this.imageUrl=imageUrl;
+        this.publisher=publisher;
+        this.author=author;
 
 
     }
