@@ -7,20 +7,20 @@ import com.library.entity.Book;
 import com.library.service.BookImageService;
 import com.library.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +38,11 @@ public class BookController {
 
 private final BookService bookService; // 컨트롤러가 진행되려면 서비스에 저장해야함
 private final BookImageService bookImageService;
+
+@Bean
+public HiddenHttpMethodFilter hiddenHttpMethodFilter(){
+    return new HiddenHttpMethodFilter();
+}
 
     //상품등록이 되서 데이터로 저장되고 메인페이지로 움직임
     @PostMapping(value = "/admin/books/new")
@@ -65,11 +70,13 @@ private final BookImageService bookImageService;
     }
 
     @GetMapping(value = {"/admin/books","/admin/books/{page}"})
+    //
+    //
     // "/admin/products/{page}" 에서 page는 옵션이야 그래서 밑에 @PathVariable("page") Optional<Integer> page 에 integer을 Optional로 기재해 줌
     public String bookManage(BookSearchDto dto, @PathVariable("page") Optional<Integer> page, Model model){
 
         //사용자가 page를 가져와서 존재하면 존재하는 페이지 가져오고 없으면 첫번째 페이지 가져오기 size는 3개만 보여주세요.
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get(): 0,10);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get(): 0,8);
 
 
         Page<Book> books = bookService.getAdminBookPage(dto,pageable);
@@ -83,7 +90,7 @@ private final BookImageService bookImageService;
 
     @GetMapping(value = {"/books/list","/books/list/{page}"})
     public String bookList(BookSearchDto dto, @PathVariable("page") Optional<Integer> page, Model model){
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,6);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,8);
 
         if(dto.getSearchQuery() == null){
             dto.setSearchQuery("");
@@ -134,7 +141,7 @@ private final BookImageService bookImageService;
             return whenError;
         }
 
-        return "redirect:/";  //메인 페이지로 이동
+        return "redirect:/admin/books";  //메인 페이지로 이동
     }
 
 
@@ -149,17 +156,35 @@ private final BookImageService bookImageService;
     }
 
 
+    //@PostMapping(value = "/admin/books/delete/{bookId}")
+    //@DeleteMapping(value = "/admin/books/delete/{bookId}")
+/*    @DeleteMapping("/admin/books/checkDelete/{bookId}")
+    public ResponseEntity deleteBook(@PathVariable("bookId") List<Long> bookId) {
 
-    @DeleteMapping("/admin/books/{bookId}")
-    public @ResponseBody ResponseEntity<List<Long>> deleteBook(@PathVariable("bookId") List<Long> bookId, Principal principal) {
-        String email = principal.getName();
 
         System.out.println("테스트 : "+bookId);
         bookService.deleteBook(bookId);
         System.out.println("테스트 : 삭제실행확인");
-        
-        return new ResponseEntity<>(bookId, HttpStatus.OK);
+
+        return new ResponseEntity<List<Long>>(bookId, HttpStatus.OK);
+    }*/
+
+    @DeleteMapping("/admin/books/checkDelete/{bookId}")
+    public ResponseEntity deleteBook(@PathVariable("bookId") Long bookId) {
+
+        bookService.deleteBook(bookId);
+        return ResponseEntity.ok(bookId);
     }
+
+    @GetMapping("/admin/books/delete/{bookId}")
+    public String deleteByID(@PathVariable Long bookId){
+        bookService.deleteBybookId(bookId);
+
+        return "redirect:/admin/books";
+    }
+
+
+
 }
 
 

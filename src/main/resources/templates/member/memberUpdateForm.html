@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/mylayout}">
 
@@ -8,76 +9,78 @@
 <meta th:if="${_csrf}" name="_csrf_header" th:content="${_csrf.headerName}"/>
 <meta th:if="${_csrf}" name="_csrf_parameter" th:content="${_csrf.parameterName}"/>
 
-<!-- 사용자 정의 CSS 추가 -->
-<th:block layout:fragment="css">
-    <style>
-        .fieldError{color:red; font-size:13pt;}
-    </style>
-</th:block>
+<!--사용자 정의 CSS 추가-->
 
-<!-- 사용자 정의 스크립트 추가 -->
-<th:block layout:fragment="script">
+    <style>
+        .fieldError{
+        color: red;
+        font-size: 13px;
+        }
+    </style>
+
+
+<!--사용자 정의 자바스크립트 추가-->
+
     <script th:inline="javascript">
         $(document).ready(function(){
-            var errorMessage = [[${errMessage}]] ;
+            var errorMessage = [[${errMessage}]];
             if(errorMessage != null){
-                alert(errorMessage) ;
+                alert(errorMessage);
             }
         });
     </script>
-</th:block>
 
 
+<body>
 <div class="content" layout:fragment="content">
-    <form action="" method="post" role="form" th:object="${memberUpdateDto}">
-        <div class="form-group">
-            <label th:for="name">이름</label>
-            <input type="text" th:field="*{name}" class="form-control" placeholder="이름을(를) 입력해주세요.">
-            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="fieldError">Invalid Data</p>
+    회원수정 페이지 Update Page
+
+    <div class="row">
+        <div class="col-md-12">
+            <form th:action="@{'/members/update'}" class="member-form" method="post" role="form" th:object="${memberFormDto}">
+
+                <h1 class="form-title"> Update </h1>
+
+                <fieldset>
+                    <legend>
+                        <span class="number">1</span> Your Basic Info
+                    </legend>
+
+                    <label th:for="name">Name:</label>
+                    <input type="text" id="name" name="name" placeholder="이름" th:field="*{name}">
+                    <p class="fieldError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
+                    <label th:for="email">Email:</label>
+                    <input type="email" id="email" name="email" readonly placeholder="이메일" th:field="*{email}">
+                    <p class="fieldError" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" ></p>
+
+                    <label th:for="password">Password:</label>
+                    <input type="password" id="password" name="password" placeholder="비밀번호" th:field="*{password}">
+                    <p class="fieldError" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+
+                    <label th:for="birth">Birth:</label>
+                    <input type="date" id="birth" name="birth" placeholder="생일" th:field="*{birth}">
+                    <p class="fieldError" th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}"></p>
+
+                    <label th:for="phone">Phone:</label>
+                    <input type="tel" id="phone" name="phone" placeholder="전화번호" th:field="*{phone}">
+                    <p class="fieldError" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
+
+                    <label th:for="address">Address:</label>
+                    <input type="text" id="address" name="address" placeholder="주소" th:field="*{address}">
+                    <p class="fieldError" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></p>
+                </fieldset>
+
+                <div class="submit-button" th:if="${not #strings.isEmpty(memberFormDto.memberId)}">
+                    <button th:formaction="@{'/members/update/' + ${memberFormDto.memberId}}" type="submit" class="form-button">회원 수정</button>
+
+                </div>
+
+                <!--보안 관련 인증 토큰을 히든 파라미터로 보내는 구문-->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            </form>
         </div>
-
-        <div class="form-group">
-            <label th:for="email">이메일</label>
-            <input type="text" th:field="*{email}" class="form-control" placeholder="이메일을(를) 입력해주세요.">
-            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError">Invalid Data</p>
-        </div>
-
-        <div class="form-group">
-            <label th:for="password">비밀 번호</label>
-            <input type="password" th:field="*{password}" class="form-control" placeholder="비밀 번호을(를) 입력해주세요.">
-            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="fieldError">Invalid Data</p>
-        </div>
-
-        <div class="form-group">
-            <label th:for="birth">생일</label>
-            <input type="date" th:field="*{birth}" class="form-control" placeholder="생일을 입력해주세요.">
-            <p th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" class="fieldError">Invalid Data</p>
-        </div>
-
-        <div class="form-group">
-            <label th:for="address">핸드폰 번호</label>
-            <input type="text" th:field="*{phone}" class="form-control" placeholder="핸드폰 번호을(를) 입력해주세요.">
-            <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="fieldError">Invalid Data</p>
-        </div>
-
-        <div class="form-group">
-            <label th:for="address">주소</label>
-            <input type="text" th:field="*{address}" class="form-control" placeholder="주소을(를) 입력해주세요.">
-            <p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="fieldError">Invalid Data</p>
-        </div>
-
-
-
-        <div style="text-align: center">
-            <button type="submit" class="btn btn-primary">전송</button>
-        </div>
-
-
-
-        <!-- 보안 관련 인증 토큰을 히든 파라미터로 보내 줍니다. -->
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-
-    </form>
+    </div>
 </div>
-
+</body>
 </html>

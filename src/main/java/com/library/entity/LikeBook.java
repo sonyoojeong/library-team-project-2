@@ -26,8 +26,7 @@ public class LikeBook extends SaveBy{
     @JoinColumn(name = "book_id")
     private Book book;
 
-    public static LikeBook createLikeBook(Like like,Book book,int count
-    ){
+    public static LikeBook createLikeBook(Like like,Book book,int count){
         LikeBook likeBook = new LikeBook();
         likeBook.setLike(like);
         likeBook.setBook(book);

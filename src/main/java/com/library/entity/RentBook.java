@@ -34,4 +34,7 @@ public class RentBook {
         return rentBook ;
     }
 
+    public void cancel(){
+        this.getBook().addStock(count);
+    }
 }

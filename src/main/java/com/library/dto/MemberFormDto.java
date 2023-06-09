@@ -1,6 +1,9 @@
 package com.library.dto;
 
+import com.library.entity.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,7 +15,11 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberFormDto {
+    private Long memberId;
+
     @NotBlank(message = "이름은 필수 입력 값입니다.")
     private String name;
 
@@ -35,9 +42,18 @@ public class MemberFormDto {
     private String address;
 
 
+public static MemberFormDto toMemberFormDto(Member member){
+    MemberFormDto memberFormDto = new MemberFormDto();
+    memberFormDto.setMemberId(member.getMemberId());
+    memberFormDto.setName(member.getName());
+    memberFormDto.setEmail(member.getEmail());
+    memberFormDto.setPassword(member.getPassword());
+    memberFormDto.setBirth(member.getBirth());
+    memberFormDto.setPhone(memberFormDto.getPhone());
+    memberFormDto.setAddress(memberFormDto.getAddress());
 
-
-
+    return memberFormDto;
+}
 
 
 
