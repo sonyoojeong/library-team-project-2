@@ -10,7 +10,7 @@ import java.util.List;
 public interface LikeBookRepository extends JpaRepository<LikeBook,Long> {
     LikeBook findByLikeLikeIdAndBookBookId(Long likeId, Long bookId);
 
-    @Query(" select new com.library.dto.LikeDetailDto(lb.likeBookId, i.bookName, lb.count, bi.imageUrl)" +
+    @Query(" select new com.library.dto.LikeDetailDto(lb.likeBookId, i.bookName, lb.count, bi.imageUrl, i.bookPublisher, i.author)" +
             " from LikeBook lb, BookImage bi" +
             " join lb.book i " +
             " where lb.like.id = :likeId " +

@@ -1,6 +1,5 @@
 package com.library.entity;
 
-import com.library.constant.BookRentalStatus;
 import com.library.constant.RentStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -67,6 +66,12 @@ public class Rent extends ServiceTime {
         return now.isAfter(getEndDate());
     }
 
+    public void cancelRent() {
+        this.rentStatus = RentStatus.CANCEL;
+        for(RentBook bean : rentBooks){
+            bean.cancel();
+        }
+    }
 }
 
 

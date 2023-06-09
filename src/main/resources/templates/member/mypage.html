@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/mylayout}" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+    </style>
+
+
+
+</head>
+<div class="content" layout:fragment="content">
+
+
+    <form th:action="@{'/members/mypage'}" role="form" method="get" >
+        <div id="wrap">
+
+            <br><br>
+            <h1>마이페이지</h1>
+
+            <h2>회원 정보</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>회원명</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><p th:if="${not #lists.isEmpty(myPageDto)}"> <span th:text="${myPageDto[0].name}"></span></p></td>
+                </tr>
+                </tbody>
+            </table>
+            <br><br>
+            <h2>책 대출 정보</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>책이름</th>
+                    <th>ISBN</th>
+                    <th>대출권수</th>
+                    <th>대출상태</th>
+                    <th>대출일자</th>
+                    <th>반납일자</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="dto : ${myPageDto}">
+                    <td th:text="${dto.bookName}"></td>
+                    <td th:text="${dto.isbn}"></td>
+                    <td th:text="${dto.count}"></td>
+                    <td th:text="${dto.rentStatus}"></td>
+                    <td th:text="${#temporals.format(dto.startDate, 'yyyy:MM:dd')}"></td>
+                    <td th:text="${#temporals.format(dto.returnDate, 'yyyy:MM:dd')}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <table>
+                <thead>
+                <th>총 대여권수</th>
+
+                </thead>
+                <tbody>
+                <!--        <tr th:each="dto : ${myPageDto}">
+                            <td>
+                                <span th:text="${#numbers.formatDecimal(dto.rentBook.count.sum())}"></span>
+                            </td>
+                        </tr>-->
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+</html>

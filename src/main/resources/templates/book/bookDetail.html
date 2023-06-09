@@ -164,13 +164,11 @@
 
         <!-- 상품 디테일에서 이름 위에 판매중, 품절  형광펜처럼 뜨게끔 하는 것 생성해주기-->
         <div class="wd50">
-           <span class="badge badge-primary mgb-15"
-                 th:if="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
-                 대여가능
+            <span class="badge badge-primary mgb-15" th:if="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
+                대여가능
             </span>
-            <span class="badge badge-danger mgb-15"
-                  th:unless="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
-                    대여불가
+                        <span class="badge badge-danger mgb-15" th:unless="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
+                대여불가
             </span>
             <div class="h4" th:text="${dto.bookName}"></div>
 

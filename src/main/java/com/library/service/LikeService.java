@@ -138,7 +138,7 @@ public class LikeService {
         }
 
         //장바구니에서 선택 된 항목들에 대한 주문 로직 호출
-        Long rentId = rentService.rents(rentDtoList,email);
+        Long rentId = rentService.rents(rentDtoList, email);
 
         //주문 신청한 목록들을 장바구니 목록에서 삭제해야 합니다.
         for (LikeRentDto dto : likeRentDtoList){

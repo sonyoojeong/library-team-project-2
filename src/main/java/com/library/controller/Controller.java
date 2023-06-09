@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @org.springframework.stereotype.Controller
 public class Controller {
 
-    @RequestMapping(value = "/")
+ @RequestMapping(value = "/")
     public String main(){
         return "/common/main";
     }
@@ -19,4 +19,5 @@ public class Controller {
     public String map(){
         return "/map";
     }
+
 }

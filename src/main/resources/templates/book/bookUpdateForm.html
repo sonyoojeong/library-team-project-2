@@ -18,6 +18,7 @@
                 alert(errorMessage);
             }
             bindDomEvent();
+
         });
 
         function bindDomEvent(){
@@ -34,6 +35,14 @@
                 $(this).siblings(".custom-file-label").html(fileName);
             });
         }
+
+
+
+
+
+
+
+
     </script>
 </th:block>
 
@@ -48,6 +57,7 @@
 </th:block>
 
 <div class="content" layout:fragment="content">
+  <br><br><br><br>
   <h3 class="pageTitle">책 수정 페이지</h3>
 
   <!--enctype="multipart/form-data" 는 이미지 업로드를 위한 구문-->
@@ -200,6 +210,7 @@
 
     <div style="text-align:right" th:if="${not #strings.isEmpty(bookDto.bookId)}">
       <button th:formaction="@{'/admin/book/' + ${bookDto.bookId}}" type="submit" class="btn btn-primary">책 수정</button>
+
     </div>
 
     <!--보안 관련 인증 토큰을 히든 파라미터로 보내는 구문-->

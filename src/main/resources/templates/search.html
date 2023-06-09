@@ -3,94 +3,45 @@
       layout:decorate="~{common/mylayout}">
 <head>
     <meta charset="UTF-8">
-    <title>도서검색</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .content {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        input[type="text"] {
-            display: block;
-            width: 100%;
-            margin-bottom: 10px;
-            padding: 8px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #book-list {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .book-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: #f2f2f2;
-            border-radius: 4px;
-        }
-
-        .book-item img {
-            width: 80px;
-            height: 120px;
-            margin-right: 10px;
-        }
-
-        .book-item-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        .book-item-author {
-            margin: 0;
-        }
-
-        p {
-            text-align: center;
-        }
-    </style>
+    <title>Title</title>
 </head>
 
-<body>
 <div class="content" layout:fragment="content">
-    <h1>도서검색</h1>
-    <input id="bookName" value="" type="text" placeholder="도서 제목을 입력하세요">
-    <button id="search">검색</button>
+<body>
+<br><br><br>
+<h1>도서검색</h1>
+<input id="bookName" value="" type="text">
+<button id="search">검색</button>
 
-    <ul id="book-list"></ul>
+<p></p>
+<script src="https://code.jquery.com/jquery-3.7.0.js"
+  integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+  crossorigin="anonymous"></script>
+<script>
 
-    <p>더블 클릭하면 상세 도서 정보 검색으로 이어집니다.</p>
-</div>
+$(document).ready(function() {
+    $("#search").click(function(){
+        $.ajax({
+            method: "GET",
+            url: "https://dapi.kakao.com/v3/search/book?target=title",
+            data: { query:$("#bookName").val() },
+            headers: {Authorization: "KakaoAK e14cc28209568378bca2acecc56c1800"}
+        })
+        .done(function( msg ) {
+            console.log(msg.documents[0].title);
+            console.log(msg.documents[0].thumbnail);
+            $( "p" ).append( "<strong>"+msg.documents[0].title+"</strong>" );
+            $( "p" ).append( "<img src ='"+msg.documents[0].thumbnail+"'/>" );
+        });
+    });
+});
 
 
+</script>
+
+
+
+
+
+</body>
+</html>
