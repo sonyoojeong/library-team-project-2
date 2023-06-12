@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>회원목록</title>
+
     <style>
         table {
             width: 100%;
@@ -25,6 +26,17 @@
             color: #337ab7;
         }
     </style>
+    <script>
+   $(document).ready(function() {
+      $(".deleteBtn").on("click", function(event) {
+            var memberName = $(this).closest("tr").find(".member-name").text();
+            var confirmDelete = confirm(memberName + '님을 삭제하시겠습니까?');
+            if (!confirmDelete) {
+              event.preventDefault();
+            }
+      });
+   });
+</script>
 </head>
 <body>
 <div class="content" layout:fragment="content">
@@ -46,18 +58,20 @@
             <td th:text="${member.memberId}"></td>
             <td th:text="${member.email}"></td>
             <td th:text="${member.password}"></td>
-            <td th:text="${member.name}"></td>
+            <td class="member-name" th:text="${member.name}"></td>
             <td th:text="${member.birth}"></td>
             <td th:text="${member.phone}"></td>
             <td th:text="${member.address}"></td>
             <td>
                 <a th:href="@{|/members/member/${member.memberId}|}">조회</a>
             </td>
-            <td>
+            <td class="deleteBtn">
                 <a th:href="@{|/members/member/delete/${member.memberId}|}">삭제</a>
             </td>
         </tr>
     </table>
+
+
 </div>
 </body>
 </html>
