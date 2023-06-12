@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/mylayout}">
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta th:if="${_csrf}" name="_csrf" th:content="${_csrf.token}"/>
+<meta th:if="${_csrf}" name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta th:if="${_csrf}" name="_csrf_parameter" th:content="${_csrf.parameterName}"/>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        $(document).ready(function(){
+           //setTimeout(function(){
+           // location.url()
+           //},2000)
+        });
+
+
+    </script>
+</th:block>
+
+<!-- 사용자 정의 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        .input-group{margin-bottom:15px;}
+        .img-div{margin-bottom:10px;}
+        .fieldError{color:red; font-size:13pt;}
+        .red-color{color: red;}
+        .white-color{color: white;}
+    </style>
+</th:block>
+
+
+<div class="content" align="center" layout:fragment="content">
+    <br>
+    <br>
+    <br>
+    <br>
+   <p>신청이 완료되었습니다.</p>
+
+    <br> <br> <br>
+
+    <div style="text-align: center">
+        <button class="btn btn-primary"><a class="nav-link white-color" href="/library/hopeBookAppList" >희망도서신청목록으로 가기</a></button>
+    </div>
+
+</div>
+</html>
