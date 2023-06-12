@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/mylayout}">
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta th:if="${_csrf}" name="_csrf" th:content="${_csrf.token}"/>
+<meta th:if="${_csrf}" name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta th:if="${_csrf}" name="_csrf_parameter" th:content="${_csrf.parameterName}"/>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+
+<script th:inline="javascript">
+ $(document).ready(function(){
+            // 멤버아이디(하드코딩)
+            var memberId = 1;
+            $('#memberId').attr('value', memberId);
+
+            // 현재날짜 세팅하기
+            var currentDate = getToday();
+            $('#currentDate').attr('value', currentDate);
+
+            // 신청 버튼 클릭시
+            $("form").submit(function(event){
+                var phone = $("#phone").val();
+                var email = $("#email").val();
+                var bookName = $("#bookName").val();
+                var isbn = $("#isbn").val();
+                var publishingDate = $("#publishingDate").val();
+                var price = $("#price").val();
+
+                // 유효성 체크
+                // 폰번호에 "-"가 들어있을 경우 공백으로 바꿔줌.
+                phone = phone.replaceAll('-','');
+
+                // 가격에 "," 가 들어있을 경우
+                price = price.replaceAll(',', '');
+
+                // 가격에 "원"이 들어있을 경우
+                price = price.replaceAll('원', '');
+
+                // 각 필드별 유효성 체크
+                if (phone === "") {
+                  alert("휴대폰 번호를 입력해주세요.");
+                  event.preventDefault(); // 폼 제출을 중지
+                  return;
+                }
+
+                // phone 값이 숫자인지 체크
+                let check = /^[0-9]+$/;
+                if (!check.test(phone)) {
+                    alert("핸드폰 번호는 숫자만 입력 가능합니다. 다시 입력해주세요.");
+                    return false;
+                }
+
+
+                if (email === "") {
+                  alert("이메일을 입력해주세요.");
+                  event.preventDefault();
+                  return;
+                }
+
+                if (bookName === "") {
+                  alert("희망 도서명을 입력해주세요.");
+                  event.preventDefault();
+                  return;
+                }
+
+                if (isbn === "") {
+                  alert("isbn이 없습니다. 도서 검색 후 희망도서를 선택해주세요.");
+                  event.preventDefault();
+                  return;
+                }
+
+                if (publishingDate === "") {
+                  alert("출판연도가 없습니다. 도서 검색 후 희망도서를 선택해주세요.");
+                  event.preventDefault();
+                  return;
+                }
+
+                if (price === "") {
+                  alert("가격이 없습니다. 도서 검색 후 희망도서를 선택해주세요.");
+                  event.preventDefault();
+                  return;
+                }
+
+                // 폰번호를 html에 숫자형태로 바꿔주기.
+                $('#phone').attr('value',phone);
+
+                // 가격을 html에 숫자형태로 바꿔주기.
+                $('#price').attr('value',price);
+
+                /*********************
+                * 도서목록 테이블에 같은 isbn이 있으면(count : 1) 도서 신청불가
+                **********************/
+                // 1. Ajax에서 신청할때 입력된 isbn의 값을 컨트롤러로 넘긴다.
+                //
+                var paramData = {
+                  "isbn" : isbn
+                };
+
+                // isIsbn 변수의 값을 false로 설정 (도서목록 테이블에 같은 isbn이 있으면 true로 바꿔주기 위해)
+                var isIsbn = false;
+
+                $.ajax({
+                        type : "get"
+                      , url : "/library/selectIsbnCnt"
+                      , data : paramData
+                      , async : false
+                      , success : function(response){
+                            var parsedResponse = JSON.parse(response);
+                            var selectIsbnCnt = parsedResponse[0].selectIsbnCnt;
+                            console.log("ISBN 중복 개수: " + selectIsbnCnt);
+
+                            // 선택한 도서의 isbn이 도서목록테이블에 이미 있으면 1
+                            if(selectIsbnCnt == 1){
+
+                                // isIsbn의 값을 true로 바꿔줌.
+                                isIsbn = true;
+                            }
+                      }
+                });
+
+                // isIsbn이 true면
+                if(isIsbn){
+                    // 저자 값 비워주기
+                    $('#author').attr('value', "");
+
+                    // 출판사 값 비워주기
+                    $('#bookPublisher').attr('value', "");
+
+                    // 희망도서명 값 비워주기
+                    $('#bookName').attr('value', "");
+
+                    // isbn 값 비워주기
+                    $('#isbn').attr('value', "");
+
+                    // 출판연도 값 비워주기
+                    $('#publishingDate').attr('value', "");
+
+                    // 가격 값 비워주기
+                    $('#price').attr('value', "");
+
+
+                    alert('해당 도서는 이미 도서관에 구비되어 있습니다.')
+                    return false;
+                }
+
+
+            });
+
+            /***********************
+             * 도서검색 버튼 클릭 이벤트
+             ***********************/
+            $('#ApiSearch').click(function(){
+
+                // 희망도서명에 값이 없을시 에러메세지 띄우기
+                var bookName = $("#bookName").val();
+
+                //             ' '        ''
+                // replaceAll (찾을 문자, 바꿀 문자)
+                bookName = bookName.replaceAll(' ','');
+
+                if(bookName == '' || bookName == null || bookName == undefined ){
+                    alert('희망 도서명을 입력해야 도서 검색이 가능합니다.(공백은 안됩니다.')
+                    return false;
+                }
+
+               location.href="/library/bookApi"
+              + "?currentDate=" + getToday()
+              + "&phone=" + $("#phone").val()
+              + "&email=" + $("#email").val()
+              + "&bookName=" + $("#bookName").val()
+              ;
+
+
+
+            });
+        });
+
+
+
+   // 현재 날짜
+
+
+    function getToday(){
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = ("0" + (1 + date.getMonth())).slice(-2);
+        var day = ("0" + date.getDate()).slice(-2);
+
+    return year + "-" + month + "-" + day;
+
+
+    }
+    </script>
+</th:block>
+<!-- 사용자 정의 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        .input-group{margin-bottom:15px;}
+        .img-div{margin-bottom:10px;}
+        .fieldError{color:red; font-size:13pt;}
+        .red-color{color: red;}
+    </style>
+</th:block>
+
+
+<div class="content" layout:fragment="content">
+    <!-- 데이터 받는곳 -->
+    <form action="" method="post" role="form" th:object="${hopeBookAppForm}"
+          enctype="multipart/form-data"><br/>
+        <p class="h2">
+            희망도서신청
+        </p><br/><br/>
+
+        <input type="hidden" th:field="*{memberId}">
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">신청일</span>
+            </div>
+            <input type="text" th:field="*{currentDate}" class="form-control" readonly>
+        </div>
+        <!--<p th:if="${#fields.hasErrors('name')}" th:errors="*{aplyDt}" class="fieldError">Invalid Data</p>-->
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">휴대폰<span class="red-color">*</span></span>
+            </div>
+            <input type="text" th:field="*{phone}" class="form-control">
+        </div>
+        <!--<p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="fieldError">Invalid Data</p>-->
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">이메일<span class="red-color">*</span></span>
+            </div>
+            <input type="text" th:field="*{email}" class="form-control">
+        </div>
+        <!--<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError">Invalid Data</p>-->
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">희망도서명<span class="red-color">*</span></span>
+            </div>
+            <input type="text" th:field="*{bookName}" class="form-control">
+            <button id="ApiSearch" th:formaction="@{/library/bookApi}" type="button"
+                    class="btn btn-primary">도서 검색</button>
+        </div>
+        <!--<p th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}" class="fieldError">Invalid Data</p>-->
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">저자</span>
+            </div>
+            <input type="text" th:field="*{author}" class="form-control" readonly>
+        </div>
+        <!--<p th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" class="fieldError">Invalid Data</p>-->
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">출판사</span>
+            </div>
+            <input type="text" th:field="*{bookPublisher}" class="form-control" readonly>
+        </div>
+        <!--<p th:if="${#fields.hasErrors('bookPublisher')}" th:errors="*{bookPublisher}" class="fieldError">Invalid Data</p>-->
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">출판연도</span>
+            </div>
+            <input type="text" th:field="*{publishingDate}" class="form-control" readonly>
+        </div>
+        <!--<p th:if="${#fields.hasErrors('publishingDate')}" th:errors="*{publishingDate}" class="fieldError">Invalid Data</p>-->
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">ISBN<span class="red-color">*</span></span>
+            </div>
+            <input type="text" th:field="*{isbn}" class="form-control" readonly>
+        </div>
+        <!--<p th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" class="fieldError">Invalid Data</p>-->
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">가격</span>
+            </div>
+            <input type="text" th:field="*{price}" class="form-control" readonly>
+        </div>
+        <input type="hidden" th:field="*{link}">
+        <input type="hidden" th:field="*{image}">
+        <!--<p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="fieldError">Invalid Data</p>-->
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">신청사유</span>
+            </div>
+            <textarea type="text" th:field="*{aplyReason}" class="form-control">
+            </textarea>
+        </div>
+        <!--<p th:if="${#fields.hasErrors('aplyReason')}" th:errors="*{aplyReason}" class="fieldError">Invalid Data</p>-->
+
+        <div style="text-align: center">
+            <button th:formaction="@{/library/insert}" type="submit"
+                    class="btn btn-primary">신청</button>
+        </div>
+
+        <!-- 보안 관련 인증 토큰을 히든 파라미터로 보내 줍니다. -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+
+    </form>
+</div>
+</html>
