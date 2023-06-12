@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
-
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/mylayout}">
 <head>
+
+
     <meta charset="UTF-8">
     <title>도서검색</title>
     <style>
@@ -83,20 +85,28 @@
     </style>
 </head>
 
-<body>
-<div class="content">
+<div class="content" layout:fragment="content">
+    <body>
+
     <h1>도서검색</h1>
+    <br/>
+
     <input id="bookName" value="" type="text" placeholder="도서 제목을 입력하세요">
     <button id="search">검색</button>
 
     <ul id="book-list"></ul>
-
+    
     <p>썸네일을 클릭하면 상세 도서 정보 검색으로 이동합니다.</p>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
-        crossorigin="anonymous"></script>
-<script>
+    <a class="navbar-brand" href="/"><script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+
+        <lottie-player src="https://lottie.host/28927f1d-042c-4d16-8c09-12bc1fc18f4a/rqyRb7FbY4.json" background="transparent" speed="1" style="width: 550px; height: 400px;" loop autoplay></lottie-player></a>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
+            crossorigin="anonymous"></script>
+    <script>
     function getBookDetails(url) {
         window.location.href = url;
     }
@@ -127,7 +137,7 @@
                 method: "GET",
                 url: "https://dapi.kakao.com/v3/search/book?target=title",
                 data: { query: bookName },
-                headers: { Authorization: "KakaoAK 2b38121158ac24fb001d984deac8002f" }
+                headers: { Authorization: "KakaoAK e14cc28209568378bca2acecc56c1800" }
             })
                 .done(function (msg) {
                     displayBookList(msg.documents);
@@ -135,6 +145,6 @@
         });
     });
 </script>
-</body>
-
+    </body>
+</div>
 </html>
