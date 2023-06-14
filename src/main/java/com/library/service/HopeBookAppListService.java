@@ -39,6 +39,11 @@ public class HopeBookAppListService {
     public int completeAppForm(int hopeBookAppSn, String rvwOpnn){
         return hopeBookAppListMapperInterface.updateCompleteAppForm(hopeBookAppSn, rvwOpnn);
     }
+    // 입고 완료 시 book_info 테이블에 인서트
+    public int InsertBook(String bookName, String bookPublisher, String author, String publishingDate, String isbn){
+        return hopeBookAppListMapperInterface.InsertBook(bookName, bookPublisher, author, publishingDate, isbn);
+    }
+
    /*public static int Insert(HopeBookAppForm hopeBookAppForm){
         return HopeBookAppListMapperInterface.Insert(hopeBookAppForm);
     }*/
