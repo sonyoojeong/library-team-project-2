@@ -29,6 +29,7 @@ public interface HopeBookAppListMapperInterface {
             "\t, A.IMG_FILE\t\t\t\t\t\tAS image-- 이미지 파일\n" +
             "\t, A.IMG_LINK\t\t\t\t\t\tAS link-- 이미지 링크\n" +
             "\t, A.RVW_OPNN\t\t\t\t\t\tAS rvwOpnn-- 검토의견\n" +
+            "\t, A.ISBN\t\t\t\t\t\tAS ISBN-- ISBN\n" +
             "FROM HOPE_BOOK_APP A \n" +
             "  , (SELECT @ROWNUM:=0) R\n" +
             " ORDER BY APLY_DT DESC " +
@@ -132,6 +133,23 @@ public interface HopeBookAppListMapperInterface {
             "UPDATE HOPE_BOOK_APP SET APLY_STTS = 4 , RVW_OPNN = #{rvwOpnn} WHERE HOPE_BOOK_APP_SN = #{hopeBookAppSn};"
     )
     int updateCompleteAppForm(@Param("hopeBookAppSn") int hopeBookAppSn,@Param("rvwOpnn") String rvwOpnn);
+
+    @Insert("INSERT INTO BOOKS_INFO(\n" +
+            "    isbn \n" +
+            "\t, author\n" +
+            "\t, book_name\n" +
+            "\t, book_publisher\n" +
+            "\t, publishing_date\n" +
+            "\n" +
+            ")VALUES(\n" +
+            "\t  #{isbn}\n" +
+            "\t, #{author} \n" +
+            "\t, #{bookName} \n" +
+            "\t, #{bookPublisher} \n" +
+            "\t, #{publishingDate} \n" +
+            ");")
+    int InsertBook(@Param("bookName") String bookName, @Param("bookPublisher") String bookPublisher, @Param("author") String author,
+                   @Param("publishingDate") String publishingDate, @Param("isbn") String isbn);
 }
 
 
