@@ -83,6 +83,38 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom{
         return new PageImpl<>(content, pageable, total);  //페이지 인터페이스는 객체 생성 못한다
     }
 
+    //메인 페이지
+    @Override
+    public Page<MainBookDto> getMainBookPage(Pageable pageable) {
+        QBook book = QBook.book;
+        QBookImage bookImage = QBookImage.bookImage;
+
+        QueryResults<MainBookDto> results = this.jpaQueryFactory
+                .select(
+                        new QMainBookDto(
+                        book.id,
+                        book.bookName,
+                        book.author,
+                        book.publisher,
+                        book.publishingDate.stringValue(),
+                        book.description,
+                        book.categoryId,
+                        bookImage.imageUrl)
+                )
+                .from(bookImage)
+                .join(bookImage.book, book)
+                .where(bookImage.repImageYesNo.eq("Y"))
+                .orderBy(book.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<MainBookDto> content = results.getResults();
+        long total = results.getTotal();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
     //BooleanExpression 타입은 QueryDSL에서 사용하는 논리식을 나타내는 타입으로, 이를 활용하면 복잡한 쿼리를 간결하고 직관적으로 작성할 수 있습니다.
 
  /*  private BooleanExpression likeCondition(String searchQuery) {
