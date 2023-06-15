@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MemberRepositoryCustom {
 
-    List<MyPageDto> getMyPage(String username);
+    List<MyPageDto> getMyPage(String email);
 
 
 }
