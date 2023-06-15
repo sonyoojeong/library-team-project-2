@@ -1,6 +1,7 @@
 package com.library.controller;
 
 import com.library.dto.MemberFormDto;
+import com.library.dto.MemberUpdateDto;
 import com.library.dto.MyPageDto;
 import com.library.entity.Member;
 import com.library.repository.MemberRepository;
@@ -32,6 +33,7 @@ public class MemberController {
     private final MemberRepository memberRepository;
     private final RentBookRepository rentBookRepository;
 
+
     @PostMapping("/sign_up")
     public String newMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -58,92 +60,62 @@ public class MemberController {
     }
 
 
-/*    @PostMapping(value = "/member/update")
-    public String memberUpdate(@Valid MemberFormDto dto, BindingResult error, Model model){
-
-        String whenError = "/member/memberUpdateForm";
-        if(error.hasErrors()){
-            return whenError;
-        }
-
-        try {
-            memberService.updateMember(dto);
-        }catch (Exception err){
-            model.addAttribute("errorMessage","회원 수정 중에 오류가 발생하였습니다.");
-            err.printStackTrace();
-            return whenError;
-        }
-        return "redirect:/";
-
-
-    }*/
-
-/*    @GetMapping(value = "/update")
-    public String updateForm(Model model){
-        String myEmail = (String) session.getAttribute("Email");
-        MemberFormDto memberFormDto = memberService.updateForm(myEmail);
-        model.addAttribute("updateMember", memberFormDto);
-
-        return "member/memberUpdateForm";
-    } */
-
-   @GetMapping(value = "/update")
-   public String updateForm(){
-
-       return "member/memberUpdateForm";
-   }
-
-    @PostMapping(value = "/update/{memberId}")
-    public String update(@ModelAttribute MemberFormDto memberFormDto, PasswordEncoder passwordEncoder){
-        memberService.updateMember(memberFormDto,passwordEncoder);
-        return "redirect:/members/" + memberFormDto.getMemberId();
+    @GetMapping("/update")
+    public String memberUpdateForm(Model model) {
+        model.addAttribute("memberUpdateDto", new MemberUpdateDto());
+        return "/member/memberUpdateForm";
     }
+
+    @PostMapping("/update")
+    public String updateMember(@Valid MemberUpdateDto memberUpdateDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "/member/memberUpdateForm";
+        }
+        try {
+            Member existingMember = memberService.findMemberByEmail(memberUpdateDto.getEmail());
+            if (existingMember == null) {
+                throw new IllegalStateException("해당 회원을 찾을 수 없습니다.");
+            }
+            Member updatedMember = Member.updateMember(memberUpdateDto, passwordEncoder, existingMember);
+            memberService.saveMember(updatedMember);
+        } catch (IllegalStateException e) {
+            model.addAttribute("errMessage", e.getMessage());
+            return "/member/memberUpdateForm";
+        }
+        System.out.println("회원 정보 업데이트 요청 들어옴");
+        return "redirect:/";
+    }
+
 
 
 
     @GetMapping(value = "/mypage")
-    public String mypage(Model model, HttpSession session){
+    public String mypage(Model model, Principal principal){
 
-        // 세션에서 로그인된 멤버의 이메일 정보 가져오기
-        String loggedInMemberEmail = session.getAttribute("loggedInMemberEmail") != null ? session.getAttribute("loggedInMemberEmail").toString() : null;
+        // 로그인 된 user_email 받아오기
+        String userEmail = principal.getName(); // 현재 로그인한 사용자의 이메일
 
-        List<MyPageDto> myPageDtos = memberRepository.getMyPage(loggedInMemberEmail);
+        Member member = memberRepository.findByEmail(userEmail); // 이메일로 멤버 조회
+
+        List<MyPageDto> myPageDtos = memberRepository.getMyPage(userEmail);
 
         MyPageDto myPageDto = new MyPageDto();
-        myPageDto.calculateTotalCount(myPageDtos);
-
-        int totalCount = myPageDto.getTotalCount();
 
 
-        model.addAttribute("myPageDto", myPageDtos);
-
-        System.out.println("멤버 : "+myPageDtos);
-
-        System.out.println("총 개수 : " +totalCount);
-        model.addAttribute("Dto", new MyPageDto());
-        System.out.println("테스트 타나요?");
-        return "/member/mypage";
-    }
-
-/*    @GetMapping("/mypage")
-    public String myPage(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String memberEmail = authentication.getName(); // 현재 로그인한 멤버의 이메일
-
-        Member member = memberService.getMemberByEmail(memberEmail);
-        List<mmypageDto> myPageDtos = memberService.getMyPageByMemberId(member.getMemberId());
-
-        int totalCount = 0;
-        if (!myPageDtos.isEmpty()) {
-            mmypageDto mmypageDto = myPageDtos.get(0);
-            totalCount = mmypageDto.getTotalCount() ; // 대여 권수의 총합
+        // myPageDtos가 비어있는 경우에도 멤버의 이름을 가져옴
+        if (myPageDtos.isEmpty()) {
+            myPageDtos.add(new MyPageDto(member.getName())); // 멤버의 이름과 대여권수가 없는 MyPageDto 객체 추가
         }
 
         model.addAttribute("myPageDto", myPageDtos);
-        model.addAttribute("totalCount", totalCount);
+
+
+
 
         return "/member/mypage";
-    }*/
+    }
+
+
 
     @GetMapping("/member/")
     public String findAll(Model model){
@@ -162,9 +134,18 @@ public class MemberController {
     }
 
     @GetMapping("/member/delete/{memberId}")
-    public String deleteById(@PathVariable Long memberId){
-        memberService.deleteById(memberId);
-        return "redirect:/members/member/";
-    }
+    public String deleteById(@PathVariable Long memberId, Principal principal, HttpServletRequest request) {
+        Optional<Member> member = memberRepository.findById(memberId);
 
-}
+        if (principal.getName().equals(member.get().getEmail()) && member.get().getRole() != Role.ADMIN) {
+            memberService.deleteById(memberId);
+            request.getSession().invalidate(); // 세션 무효화
+            return "redirect:/";
+
+        } else {
+            memberService.deleteById(memberId);
+
+            return "redirect:/members/member/";
+
+        }
+    }
