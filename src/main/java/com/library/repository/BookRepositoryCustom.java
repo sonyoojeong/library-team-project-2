@@ -11,5 +11,7 @@ public interface BookRepositoryCustom {
     Page<Book> getAdminBookPage(BookSearchDto searchDto, Pageable pageable);
 
     Page<BookListDto> getListBookPage(BookSearchDto searchDto, Pageable pageable);
+
+    Page<MainBookDto> getMainBookPage(Pageable pageable);
 }
 
