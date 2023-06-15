@@ -42,18 +42,11 @@ public class MemberService implements UserDetailsService {
     }
 
     private void validateDuplicateMember(Member member) {
-        Member findMember = memberRepository.findByEmail(member.getEmail()) ;
-        if(findMember != null){
-            throw new IllegalStateException("이미 가입된 회원입니다.") ;
+        Member findMember = memberRepository.findByEmail(member.getEmail());
+        if (findMember != null && !findMember.getEmail().equals(member.getEmail())) {
+            throw new IllegalStateException("이미 가입된 회원입니다.");
         }
     }
-
-    public void updateMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder){
-
-        memberRepository.save(Member.updateMember(memberFormDto, passwordEncoder));
-
-    }
-
 
 
     public List<MemberFormDto> findAll() {
@@ -85,20 +78,15 @@ public class MemberService implements UserDetailsService {
         memberRepository.deleteById(memberId);
     }
 
-    public MemberFormDto updateForm(String email) {
-        Member member = memberRepository.findByEmail(email);
-        if(member != null){
-            return MemberFormDto.toMemberFormDto(member);
-        }else {
-            return null;
-        }
 
-    }
 
     public List<MyPageDto> getMyPage(String loggedInMemberEmail){
         return memberRepository.getMyPage(loggedInMemberEmail);
     }
 
 
+    public Member findMemberByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
 }
 
