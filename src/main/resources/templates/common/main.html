@@ -46,7 +46,7 @@
                         <div class="book-title">[[${bean.bookName}]]</div>
                         <div class="book-author">[[${bean.author}]]</div>
                         <div class="book-sum">[[${bean.description}]]</div>
-                        <a class="book-see" th:href="'/book/' + ${bean.id}">See The Book</a>
+                        <a class="book-see" th:href="'/book/' + ${bean.id}" th:target="_blank">See The Book</a>
                     </div>
                 </div>
             </th:block>
