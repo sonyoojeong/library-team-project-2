@@ -1,63 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/mylayout}">
-
-<th:block layout:fragment="script">
-  <script th:inline="javascript">
-    $(document).ready(function(){
-      // Example code for sending data to MySQL via AJAX
-      $('#submitForm').submit(function(event) {
-        event.preventDefault(); // Prevent form submission
-
-        var formData = new FormData(this);
-
-        $.ajax({
-          type: 'POST',
-          url: '/board/insert', // Endpoint to handle form submission
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function(response) {
-            // Handle success response
-          },
-          error: function(xhr, status, error) {
-            // Handle error response
-          }
-        });
-      });
-    });
-  </script>
-
-  <script th:inline="javascript">
-  function downloadFile(fileUrl) {
-    // Create a temporary anchor element
-    var link = document.createElement('a');
-    link.href = fileUrl;
-    link.download = fileUrl.split('/').pop(); // Set the file name for download
-
-    // Trigger the click event to initiate download
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-</script>
-
-  <script th:inline="javascript">
-  function downloadFile(fileUrl) {
-    // Create a temporary anchor element
-    var link = document.createElement('a');
-    link.href = fileUrl;
-    link.download = fileUrl.split('/').pop(); // Set the file name for download
-
-    // Trigger the click event to initiate download
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-</script>
-</th:block>
-
+      layout:decorate="~{common/mylayout}">>
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
   <script th:inline="javascript">
@@ -70,22 +14,7 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
   <style>
-      input {
-        vertical-align: middle;
-      }
-      input.form-text {
-        border: 1px solid #bcbcbc;
-        height: 28px;
-      }
-      input.img-button {
-        background: url( "images/button_search.png" ) no-repeat;
-        border: none;
-        width: 32px;
-        height: 32px;
-        cursor: pointer;
-      }
-    </style>
-
+  </style>
 </th:block>
 
 <div class="content" layout:fragment="content">
@@ -93,13 +22,12 @@
     <thead>
     <tr>
       <td>번호</td>
-      <td>작성자</td>
+<!--      <td>기관</td>-->
       <td>제목</td>
-      <td>내용</td>
-      <td>등록일</td>
-      <td>파일</td>
-      <td>수정</td>
-      <td>삭제</td>
+      <td>작성자</td>
+<!--      <td>첨부</td>-->
+      <td>작성일</td>
+<!--      <td>조회수</td>-->
     </tr>
     </thead>
     <tbody>
@@ -108,26 +36,17 @@
       <td>
         <a th:href="'/board/detail/'+${bean.no}" th:text="${bean.writer}"></a>
       </td>
+      <td>
+        <a th:href="'/board/detail/'+${bean.no}" th:text="${bean.boardDate}"></a>
+      </td>
       <td th:text="${bean.subject}"></td>
-      <td th:text="${bean.description}"></td>
-      <td th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></td>
-
-      <td>
-        <a th:href="@{'/library/board/'+${bean.fileName}}" download>
-          <!--          <button type="button"  onclick="alert('다운로드할까요..?')">-->
-          <!--            <img src="/library/board/images/download-btn.png" width="30px;" height="20px;"/>-->
-          <!--          </button>-->
-          <button class="btn" id="btn" type="submit" onclick="alert('다운로드..?')">
-            <img class="btn-img" src="https://tinyurl.com/266vaxnu" width="30px;" height="30px;"></button>
-        </a>
-      </td>
-
-      <td>
-        <a th:href="'/board/update/'+${bean.no}" th:text="수정"></a>
-      </td>
-      <td>
-        <a th:href="'/board/delete/'+${bean.no}" th:text="삭제"></a>
-      </td>
+<!--      로그인한 사람만 수정/삭제기능 사용 가능...-->
+<!--      <td>-->
+<!--        <a th:href="'/board/update/'+${bean.no}" th:text="수정"></a>-->
+<!--      </td>-->
+<!--      <td>-->
+<!--        <a th:href="'/board/delete/'+${bean.no}" th:text="삭제"></a>-->
+<!--      </td>-->
     </tr>
     </tbody>
   </table>

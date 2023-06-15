@@ -24,37 +24,21 @@
             <td th:text="${board.no}"></td>
         </tr>
         <tr>
-            <td>작성자</td>
-            <td th:text="${board.writer}"></td>
-        </tr>
-        <tr>
             <td>글제목</td>
             <td th:text="${board.subject}"></td>
         </tr>
         <tr>
-            <td>글내용</td>
-            <td th:text="${board.description}"></td>
+            <td>작성자</td>
+            <td th:text="${board.writer}"></td>
         </tr>
-
+<!--        <tr>-->
+<!--            <td>첨부</td>-->
+<!--            <td th:text="${board.subject}"></td>-->
+<!--        </tr>-->
         <tr>
-            <td>파일</td>
-            <td>
-                <a th:href="@{'/board/download/' + ${board.fileName}}" download alt="다운로드"></a>
-            </td>
+            <td>작성일</td>
+            <td th:text="${board.boardDate}"></td>
         </tr>
-        <!--            <form action="/upload" method="post" enctype="multipart/form-data">-->
-
-        <!--                <h4>단일 파일 업로드</h4>-->
-        <!--                <input type="file" name="file">-->
-
-        <!--                <h4>다중 파일 업로드</h4>-->
-        <!--                <input type="file" multiple="multiple" name="files">-->
-
-        <!--                <input type="submit"/>-->
-        <!--            </form>-->
-        </tr>
-
-
     </table>
     <hr/>
     <a th:href="'/board/list'">
