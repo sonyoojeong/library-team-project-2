@@ -92,19 +92,19 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom{
         QueryResults<MainBookDto> results = this.jpaQueryFactory
                 .select(
                         new QMainBookDto(
-                        book.id,
+                        book.bookId,
                         book.bookName,
                         book.author,
+                        bookImage.imageUrl,
                         book.publisher,
-                        book.publishingDate.stringValue(),
+                        book.publishingDate,
                         book.description,
-                        book.categoryId,
-                        bookImage.imageUrl)
+                        book.categoryId)
                 )
                 .from(bookImage)
                 .join(bookImage.book, book)
                 .where(bookImage.repImageYesNo.eq("Y"))
-                .orderBy(book.id.desc())
+                .orderBy(book.bookId.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
