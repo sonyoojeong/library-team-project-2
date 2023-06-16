@@ -8,5 +8,4 @@ public interface MemberRepositoryCustom {
 
     List<MyPageDto> getMyPage(String username);
 
-
 }
