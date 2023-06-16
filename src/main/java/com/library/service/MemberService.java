@@ -78,15 +78,7 @@ public class MemberService implements UserDetailsService {
         memberRepository.deleteById(memberId);
     }
 
-    public MemberFormDto updateForm(String email) {
-        Member member = memberRepository.findByEmail(email);
-        if(member != null){
-            return MemberFormDto.toMemberFormDto(member);
-        }else {
-            return null;
-        }
 
-    }
 
     public List<MyPageDto> getMyPage(String loggedInMemberEmail){
         return memberRepository.getMyPage(loggedInMemberEmail);

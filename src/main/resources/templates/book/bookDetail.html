@@ -212,13 +212,14 @@
             <!--얇은 선은 hr 태그 사용하면 된다-->
             <hr class="my-4">
 
-            <div class="text-right"
-                 th:if="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE}">
+     <div class="text-right"
+                 th:if="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
                 <button type="button" class="btn btn-light border-primary btn-lg" onclick="addLike()">관심목록 추가</button>
                 <button type="button" class="btn btn-primary btn-lg" onclick="rent()">대여하기</button>
             </div>
             <div class="text-right"
-                 th:unless="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE}">
+                 th:unless="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
+                <button type="button" class="btn btn-light border-primary btn-lg" onclick="addLike()">관심목록 추가</button>
                 <button type="button" class="btn btn-danger btn-lg" onclick="noRent()">대출중</button>
 
                 <!--btn-lg << lg는 large-->

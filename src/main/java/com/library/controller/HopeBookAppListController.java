@@ -33,7 +33,8 @@ public class HopeBookAppListController {
     public String openHopeBookAppPage(Model model){
         // 조회
         List<HopeBookAppForm> hopeBookAppList = hopeBookAppListService.selectAll();
-        System.out.println("리스트 개수:"+hopeBookAppList.size()+"개");
+        System.out.println("isbn있는지 확인::::::::" + hopeBookAppList.get(0).getIsbn());
+        System.out.println("희망도서신청목록 리스트 개수:"+hopeBookAppList.size()+"개");
         // 모델에 조회한 리스트 담기
         model.addAttribute("list", hopeBookAppList);
         HopeBookSearchDto dto = new HopeBookSearchDto();
@@ -158,7 +159,7 @@ public class HopeBookAppListController {
         //변환된 데이터를 List형태에 저장
         //JSON 파일을 Java 객체로 deserialization 하기 위해서 ObjectMapper의 readValue() 메서드를 이용
         List<Map<String, Object>> list = mapper.readValue(json, new TypeReference<ArrayList<Map<String, Object>>>(){});
-
+        System.out.println("입고완료로 가져온 리스트 개수:::::::::::" + list.size());
 
         int updateCnt = 0;
 
@@ -168,13 +169,39 @@ public class HopeBookAppListController {
             int hopeBookAppSn = Integer.parseInt((String)list.get(i).get("sn"));
             // 검토의견
             String rvwOpnn = (String)list.get(i).get("rvwOpnn");
+            // 이미지
+            String image = (String)list.get(i).get("image");
+            // 링크
+            String link = (String)list.get(i).get("link");
+            // 도서명
+            String bookName = (String)list.get(i).get("bookName");
+            // 출판사
+            String bookPublisher = (String)list.get(i).get("bookPublisher");
+            // 저자
+            String author = (String)list.get(i).get("author");
+            // 발행일
+            String publishingDate = (String)list.get(i).get("publishingDate");
+            // isbn
+            String isbn = (String)list.get(i).get("isbn");
 
             System.out.println("list(" + i + "순번) : " + hopeBookAppSn);
             System.out.println("list(" + i + "검토의견) : " + rvwOpnn);
+            System.out.println("list(" + i + "이미지) : " + image);
+            System.out.println("list(" + i + "링크) : " + link);
+            System.out.println("list(" + i + "도서명) : " + bookName);
+            System.out.println("list(" + i + "출판사) : " + bookPublisher);
+            System.out.println("list(" + i + "저자) : " + author);
+            System.out.println("list(" + i + "발행일) : " + publishingDate);
+            System.out.println("list(" + i + "isbn) : " + isbn);
 
             // 입고완료 상태로 update service(파라미터 순번)
             int resultCnt = hopeBookAppListService.completeAppForm(hopeBookAppSn, rvwOpnn);
             updateCnt = updateCnt + resultCnt;
+
+            // 도서 테이블 인서트
+            int cnt = -999;
+            cnt = hopeBookAppListService.InsertBook(bookName, bookPublisher, author, publishingDate, isbn);
+
 
         }
 

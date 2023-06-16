@@ -18,7 +18,7 @@
                 // 2. 검색 내용을의 값을 가져온다.
                 var srchData = $("#srchData").val();
 
-                // 두개의 값을 가지고 컨트롤러의 보내준다.
+                // 두개의 값을 가지고 컨트롤러에 보내준다.
                 location.href="/library/hopeBookAppListBySrchData"
                 + "?srchKind=" + srchKind
                 + "&srchData=" + srchData;
@@ -118,7 +118,7 @@
             });
 
             if(appSttsCheck){
-                alert('신청상태가 신청완료인 상태만 승인 처리가 가능합니다.')
+                alert('신청상태가 신청인 상태만 승인 처리가 가능합니다.')
                 return false;
             }
             //---------------------------
@@ -205,7 +205,7 @@
             });
 
             if(appSttsCheck){
-                alert('신청상태가 신청완료인 상태만 반려 처리가 가능합니다.')
+                alert('신청상태가 신청인 상태만 반려 처리가 가능합니다.')
                 return false;
             }
             //---------------------------
@@ -321,14 +321,32 @@
               // 2) 검토사유
               var rvwOpnn = td.eq(10).children()[0].value;
 
-
-
-
+                // 이미지
+                var image =  td.eq(12).children()[0].value;
+                // 링크
+                var link =  td.eq(13).children()[0].value;
+                // 도서명
+                var bookName =  td.eq(14).children()[0].value;
+                // 출판사
+                var bookPublisher =  td.eq(15).children()[0].value;
+                // 저자
+                var author =  td.eq(16).children()[0].value;
+                // 발행일
+                var publishingDate =  td.eq(17).children()[0].value;
+                // isbn
+                var isbn =  td.eq(18).children()[0].value;
 
 
               list[i] = {
                       "sn" :  sn
                     , "rvwOpnn" : rvwOpnn
+                    , "image" : image
+                    , "link" : link
+                    , "bookName" : bookName
+                    , "bookPublisher" : bookPublisher
+                    , "author" : author
+                    , "publishingDate" : publishingDate
+                    , "isbn" : isbn
               }
             };
             var list = {
@@ -392,90 +410,95 @@
 <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--시작-->
 <div class="content" layout:fragment="content">
-    <!--<form><br/> 폼으로 감싸면 값이 안넘어감-->
-        <p class="h2">
-            &nbsp;&nbsp;&nbsp;&nbsp;희망도서신청목록
-        </p><br/><br/>
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <!-- 1.희망도서신청목록내역  검색 박스 -->
-        <!-- /* 필드 검색 */ -->
-        <!--<form th:action="@{'/admin/products/' + ${products.number}}" role="form" method="get" th:object="${products}">-->
+    <p class="h2">
+        &nbsp;&nbsp;&nbsp;&nbsp;희망도서신청목록
+    </p><br/><br/>
+<!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+    <!-- 1.희망도서신청목록내역  검색 박스 -->
+    <!-- /* 필드 검색 */ -->
+    <!--<form th:action="@{'/admin/products/' + ${products.number}}" role="form" method="get" th:object="${products}">-->
 
 
-            <div style="text-align: right" class="form-inline justify-content-center" th:object="${searchDto}">
-                <!--<select th:field="*{searchBy}" class="form-control" style="width:auto;">-->
-                <select th:field="*{srchKind}" class="form-control" style="width:auto;">
-                    <option value="1">도서명</option>
-                    <option value="2">저자</option>
-                    <option value="3">출판사</option>
-                </select>
-                <!--<input th:field="*{searchQuery}" class="form-control" type="text" placeholder="검색어를 입력해주세요.">-->
-                <input th:field="*{srchData}" class="form-control" type="text" placeholder="검색어를 입력해주세요.">&nbsp;&nbsp;
-                <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <button type="submit" class="btn btn-secondary" onclick="approvalBtnClick()">승인</button>&nbsp;&nbsp;
-                <button type="submit" class="btn btn-secondary" onclick="returnBtnClick()">반려</button>&nbsp;&nbsp;
-                <button type="submit" class="btn btn-secondary" onclick="completeBtnClick()">입고</button>
-            </div>
-        <!--</form>-->
-        <br>
-        <!-- 2.희망도서신청목록내역 그리드 -->
-        <table class="table" id="table_id">
-            <thead>
-                <tr>
-                    <th>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" id="allCheckBox" onclick="allChecked()">
-                        </label>
-                    </th>
-                    <td>번호</td>
-                    <td>책표지</td>
-                    <td>희망도서명</td>
-                    <td>출판사</td>
-                    <td>저자</td>
-                    <td>발행일</td>
-                    <td>신청일</td>
-                    <td>신청상태</td>
-                    <td>신청사유</td>
-                    <td>검토의견</td>
-                </tr>
-            </thead>
+        <div style="text-align: right" class="form-inline justify-content-center" th:object="${searchDto}">
+            <!--<select th:field="*{searchBy}" class="form-control" style="width:auto;">-->
+            <select th:field="*{srchKind}" class="form-control" style="width:auto;">
+                <option value="1">도서명</option>
+                <option value="2">저자</option>
+                <option value="3">출판사</option>
+            </select>
+            <!--<input th:field="*{searchQuery}" class="form-control" type="text" placeholder="검색어를 입력해주세요.">-->
+            <input th:field="*{srchData}" class="form-control" type="text" placeholder="검색어를 입력해주세요.">&nbsp;&nbsp;
+            <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit" class="btn btn-secondary" onclick="approvalBtnClick()">승인</button>&nbsp;&nbsp;
+            <button type="submit" class="btn btn-secondary" onclick="returnBtnClick()">반려</button>&nbsp;&nbsp;
+            <button type="submit" class="btn btn-secondary" onclick="completeBtnClick()">입고</button>
+        </div>
+    <!--</form>-->
+    <br>
+    <!-- 2.희망도서신청목록내역 그리드 -->
+    <table class="table" id="table_id">
+        <thead>
+            <tr>
+                <th>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="allCheckBox" onclick="allChecked()">
+                    </label>
+                </th>
+                <td>번호</td>
+                <td>책표지</td>
+                <td>희망도서명</td>
+                <td>출판사</td>
+                <td>저자</td>
+                <td>발행일</td>
+                <td>신청일</td>
+                <td>신청상태</td>
+                <td>신청사유</td>
+                <td>검토의견</td>
+            </tr>
+        </thead>
+        <tbody>
             <form id="myForm" action="/library/update" method="post">
-                <tbody>
-                    <tr th:each="form, status: ${list}">
-                        <td style="vertical-align: middle;">
-                            <input type="checkbox" name="chk" class="chk checkbox-inline" onclick="chkClicked()" th:value="${form.hopeBookAppSn}">
-                        </td>
-                        <!--1.게시글순번-->
-                        <td width="80px" height="50px" th:text="${form.no}" style="vertical-align: middle;"></td>
-                        <!--2.이미지파일-->
-                        <td height="50px" width="150px"><img th:src="${form.image}" ></td>
-                        <!--3.이미지링크-->
-                        <td width="300px"  height="50px" align="left" style="vertical-align: middle; text-overflow: ellipsis;"><a class="ellipsis" th:href="${form.link}" target='_blank'>[[${form.bookName}]]</a></td>
-                        <!--4.출판사-->
-                        <td th:text="${form.bookPublisher}"  id="bookPublisher" height="50px" width="150px" style="vertical-align: middle;"></td>
-                        <!--5.저자-->
-                        <td th:text="${form.author}" id="author"  height="50px"style="vertical-align: middle;"></td>
-                        <!--6.발행일-->
-                        <td width="200px" height="50px" th:text="${form.publishingDate}" style="vertical-align: middle;"></td>
-                        <!--7.신청일-->
-                        <td width="200px"   height="50px"th:text="${form.aplyDt}" style="vertical-align: middle;"></td>
-                        <!--8.신청상태명-->
-                        <td width="200px"   height="50px"th:text="${form.aplySttsNm}" style="vertical-align: middle;"></td>
-                        <!--9.신청사유-->
-                        <td width="250px"  height="50px"th:text="${form.aplyReason}" style="vertical-align: middle;"></td>
-                        <!--10.검토사유-->
-                        <td width="350px">
-                            <textarea class="form-control" type="text" th:value="${form.rvwOpnn}" th:text="${form.rvwOpnn}"
-                                      th:readonly="${form.aplyStts eq '1' ? false :'readonly'}"
-                            ></textarea>
-                        </td>
-                        <!--11.신청상태코드(히든)-->
-                        <td><input type="hidden" th:value="${form.aplyStts}"/></td>
-                    </tr>
-                </tbody>
-            </form>
-        </table>
-        <!--</form> 폼으로 감싸면 값이 안넘어감-->
+                <tr th:each="form, status: ${list}">
+                    <td style="vertical-align: middle;">
+                        <input type="checkbox" name="chk" class="chk checkbox-inline" onclick="chkClicked()" th:value="${form.hopeBookAppSn}">
+                    </td>
+                    <!--1.게시글순번-->
+                    <td width="80px" height="50px" th:text="${form.no}" style="vertical-align: middle;"></td>
+                    <!--2.이미지파일-->
+                    <td height="50px" width="150px"><img th:src="${form.image}" ></td>
+                    <!--3.이미지링크-->
+                    <td width="300px"  height="50px" align="left" style="vertical-align: middle; text-overflow: ellipsis;"><a class="ellipsis" th:href="${form.link}" target='_blank'>[[${form.bookName}]]</a></td>
 
+                    <!--4.출판사-->
+                    <td th:text="${form.bookPublisher}"  id="bookPublisher" height="50px" width="150px" style="vertical-align: middle;"></td>
+                    <!--5.저자-->
+                    <td th:text="${form.author}" id="author"  height="50px"style="vertical-align: middle;"></td>
+                    <!--6.발행일-->
+                    <td width="200px" height="50px" th:text="${form.publishingDate}" style="vertical-align: middle;"></td>
+                    <!--7.신청일-->
+                    <td width="200px"   height="50px"th:text="${form.aplyDt}" style="vertical-align: middle;"></td>
+                    <!--8.신청상태명-->
+                    <td width="200px"   height="50px"th:text="${form.aplySttsNm}" style="vertical-align: middle;"></td>
+                    <!--9.신청사유-->
+                    <td width="250px"  height="50px"th:text="${form.aplyReason}" style="vertical-align: middle;"></td>
+                    <!--10.검토의견-->
+                    <td width="350px">
+                        <textarea class="form-control" type="text" th:value="${form.rvwOpnn}" th:text="${form.rvwOpnn}"
+                                  th:readonly="${form.aplyStts eq '1' ? false :'readonly'}"
+                        ></textarea>
+                    </td>
+                    <!--11.신청상태코드(히든)-->
+                    <td><input type="hidden" th:value="${form.aplyStts}"/></td>
+                    <td><input type="hidden" th:value="${form.image}"/></td>
+                    <td><input type="hidden" th:value="${form.link}"/></td>
+                    <td><input type="hidden" th:value="${form.bookName}"/></td>
+                    <td><input type="hidden" th:value="${form.bookPublisher}"/></td>
+                    <td><input type="hidden" th:value="${form.author}"/></td>
+                    <td><input type="hidden" th:value="${form.publishingDate}"/></td>
+                    <td><input type="hidden" th:value="${form.isbn}"/></td>
+                </tr>
+            </form>
+        </tbody>
+    </table>
 </div>
 </html>
