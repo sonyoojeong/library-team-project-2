@@ -22,7 +22,6 @@ public class MyPageDto {
 
 
 
-
   @QueryProjection  // Projection은 테이블의 특정 컬럼정보를 조회하는 동작을 말합니다. (특정한 것만 골라내서 뽑아내는걸 프로젝션, 전체 컬럼에서 필요한 것만 뽑아냄)
   // 해당 조회 결과를 dto에 대입해 줍니다.
   public MyPageDto(Long memberId,String name,String bookName, String isbn,int count, RentStatus rentStatus, LocalDateTime startDate,LocalDateTime expectedReturnDate) {
