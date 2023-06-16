@@ -40,7 +40,7 @@
             <th:block th:each="bean, status: ${bookMainDto}">
                 <div class="book-cell">
                     <div class="book-img">
-                        <img th:src="${bean.imageUrl}" th:alt="${bean.bookName}">
+                        <img class="book-photo" th:src="${bean.imageUrl}" th:alt="${bean.bookName}">
                     </div>
                     <div class="book-content">
                         <div class="book-title">[[${bean.bookName}]]</div>
