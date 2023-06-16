@@ -203,6 +203,9 @@
         .img-div{margin-bottom:10px;}
         .fieldError{color:red; font-size:13pt;}
         .red-color{color: red;}
+        .readColor input[readonly] {
+          background-color: #dae6e8;
+        }
     </style>
 </th:block>
 
@@ -217,7 +220,7 @@
 
         <input type="hidden" th:field="*{memberId}">
 
-        <div class="input-group">
+        <div class="input-group readColor">
             <div class="input-group-prepend">
                 <span class="input-group-text">신청일</span>
             </div>
@@ -251,7 +254,7 @@
         </div>
         <!--<p th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}" class="fieldError">Invalid Data</p>-->
 
-        <div class="input-group">
+        <div class="input-group readColor">
             <div class="input-group-prepend">
                 <span class="input-group-text">저자</span>
             </div>
@@ -259,7 +262,7 @@
         </div>
         <!--<p th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" class="fieldError">Invalid Data</p>-->
 
-        <div class="input-group">
+        <div class="input-group readColor">
             <div class="input-group-prepend">
                 <span class="input-group-text">출판사</span>
             </div>
@@ -267,7 +270,7 @@
         </div>
         <!--<p th:if="${#fields.hasErrors('bookPublisher')}" th:errors="*{bookPublisher}" class="fieldError">Invalid Data</p>-->
 
-        <div class="input-group">
+        <div class="input-group readColor">
             <div class="input-group-prepend">
                 <span class="input-group-text">출판연도</span>
             </div>
@@ -275,7 +278,7 @@
         </div>
         <!--<p th:if="${#fields.hasErrors('publishingDate')}" th:errors="*{publishingDate}" class="fieldError">Invalid Data</p>-->
 
-        <div class="input-group">
+        <div class="input-group readColor">
             <div class="input-group-prepend">
                 <span class="input-group-text">ISBN<span class="red-color">*</span></span>
             </div>
@@ -283,7 +286,7 @@
         </div>
         <!--<p th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" class="fieldError">Invalid Data</p>-->
 
-        <div class="input-group">
+        <div class="input-group readColor">
             <div class="input-group-prepend">
                 <span class="input-group-text">가격</span>
             </div>
