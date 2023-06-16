@@ -49,12 +49,6 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;    // 관리자,사용자
-    
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Rent> rents = new ArrayList<>();
 
 
     public static Member createMember(MemberFormDto memberFormDto,
