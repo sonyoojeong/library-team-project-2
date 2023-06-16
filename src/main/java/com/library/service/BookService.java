@@ -133,4 +133,8 @@ public class BookService {
         bookRepository.deleteById(bookId);
     }
 
+    //메인 페이지(전체 사용자용)
+    public Page<MainBookDto> getMainBookPage(Pageable pageable){
+        return bookRepository.getMainBookPage(pageable);
+    }
 }

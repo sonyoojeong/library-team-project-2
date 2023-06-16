@@ -2,7 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/mylayout}">
+      
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta th:if="${_csrf}" name="_csrf" th:content="${_csrf.token}"/>
+<meta th:if="${_csrf}" name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta th:if="${_csrf}" name="_csrf_parameter" th:content="${_csrf.parameterName}"/>
 
 <!--사용자 정의 자바스크립트 추가-->
 <th:block layout:fragment="script">
@@ -33,65 +37,19 @@
 
         <div class="flickity-viewport">
           <div class="flickity-slider">
-            <div class="book-cell is-selected">
-              <div class="book-img">
-                <img src="https://images-na.ssl-images-amazon.com/images/I/81WcnNQ-TBL.jpg" alt="" class="book-photo">
-              </div>
-              <div class="book-content">
-                <div class="book-title">BIG MAGIC</div>
-                <div class="book-author">by Elizabeth Gilbert</div>
-                <div class="book-sum">Readers of all ages and walks of life have drawn inspiration and empowerment from Elizabeth Gilbert’s books for years. </div>
-                <div class="book-see">See The Book</div>
-              </div>
-            </div>
-
-            <div class="book-cell">
-              <div class="book-img">
-                <img src="https://i.pinimg.com/originals/a8/b9/ff/a8b9ff74ed0f3efd97e09a7a0447f892.jpg" alt="" class="book-photo">
-              </div>
-              <div class="book-content">
-                <div class="book-title">Ten Thousand Skies Above You</div>
-                <div class="book-author">by Claudia Gray</div>
-                <div class="book-sum">The hunt for each splinter of Paul's soul sends Marguerite racing through a war-torn San Francisco.</div>
-                <div class="book-see book-blue">See The Book</div>
-              </div>
-            </div>
-
-            <div class="book-cell">
-              <div class="book-img">
-                <img src="https://www.abebooks.com/blog/wp-content/uploads/2016/08/10.jpg" alt="" class="book-photo">
-              </div>
-              <div class="book-content">
-                <div class="book-title">A Tale For The Time Being</div>
-                <div class="book-author">by Ruth Ozeki</div>
-                <div class="book-sum">In Tokyo, sixteen-year-old Nao has decided there’s only one escape from her aching loneliness and her classmates’ bullying.</div>
-                <div class="book-see book-pink">See The Book</div>
-              </div>
-            </div>
-
-            <div class="book-cell">
-              <div class="book-img">
-                <img src="https://images-na.ssl-images-amazon.com/images/I/81af+MCATTL.jpg" alt="" class="book-photo">
-              </div>
-              <div class="book-content">
-                <div class="book-title">The Great Gatsby</div>
-                <div class="book-author">by F.Scott Fitzgerald</div>
-                <div class="book-sum">The Great Gatsby, F. Scott Fitzgerald’s third book, stands as the supreme achievement of his career.</div>
-                <div class="book-see book-yellow">See The Book</div>
-              </div>
-            </div>
-
-            <div class="book-cell">
-              <div class="book-img">
-                <img src="https://images-na.ssl-images-amazon.com/images/I/81UWB7oUZ0L.jpg" alt="" class="book-photo">
-              </div>
-              <div class="book-content">
-                <div class="book-title">After You</div>
-                <div class="book-author">by Jojo Moyes</div>
-                <div class="book-sum">Louisa Clark is no longer just an ordinary girl living an ordinary life. After the transformative six months spent.</div>
-                <div class="book-see book-purple">See The Book</div>
-              </div>
-            </div>
+            <th:block th:each="bean, status: ${bookMainDto}">
+                <div class="book-cell">
+                    <div class="book-img">
+                        <img class="book-photo" th:src="${bean.imageUrl}" th:alt="${bean.bookName}">
+                    </div>
+                    <div class="book-content">
+                        <div class="book-title">[[${bean.bookName}]]</div>
+                        <div class="book-author">[[${bean.author}]]</div>
+                        <div class="book-sum">[[${bean.description}]]</div>
+                        <a class="book-see" th:href="'/book/' + ${bean.id}" th:target="_blank">See The Book</a>
+                    </div>
+                </div>
+            </th:block>
           </div>
         </div>
         <ol class="flickity-page-dots">
