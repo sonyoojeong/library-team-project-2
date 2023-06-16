@@ -1,9 +1,7 @@
 package com.library.repository;
 
 import com.library.constant.BookRentalStatus;
-import com.library.dto.BookListDto;
-import com.library.dto.BookSearchDto;
-import com.library.dto.QBookListDto;
+import com.library.dto.*;
 import com.library.entity.Book;
 import com.library.entity.QBook;
 import com.library.entity.QBookImage;
@@ -89,17 +87,16 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom{
         QBook book = QBook.book;
         QBookImage bookImage = QBookImage.bookImage;
 
-        QueryResults<MainBookDto> results = this.jpaQueryFactory
+        QueryResults<MainBookDto> results = this.queryFactory
                 .select(
                         new QMainBookDto(
                         book.bookId,
                         book.bookName,
                         book.author,
                         bookImage.imageUrl,
-                        book.publisher,
+                        book.bookPublisher,
                         book.publishingDate,
-                        book.description,
-                        book.categoryId)
+                        book.description)
                 )
                 .from(bookImage)
                 .join(bookImage.book, book)
