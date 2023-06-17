@@ -21,6 +21,7 @@ public class LikeBook extends SaveBy{
     @JoinColumn(name = "like_id")
     private Like like;
 
+    
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
