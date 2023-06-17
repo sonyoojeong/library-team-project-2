@@ -23,6 +23,7 @@ public class Like {
     @OneToMany(mappedBy = "like", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LikeBook> likeBooks = new ArrayList<>();
 
+
     
     //회원하고 연동해주는 creatLike 메서드 생성
     public static Like CreateLike(Member member){
