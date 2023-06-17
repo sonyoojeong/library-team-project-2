@@ -87,7 +87,6 @@ public class MemberController {
     }
 
 
-
     @GetMapping(value = "/mypage")
     public String mypage(Model model, Principal principal){
 
