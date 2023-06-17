@@ -1,9 +1,7 @@
 package com.library.repository;
 
 import com.library.constant.BookRentalStatus;
-import com.library.dto.BookListDto;
-import com.library.dto.BookSearchDto;
-import com.library.dto.QBookListDto;
+import com.library.dto.*;
 import com.library.entity.Book;
 import com.library.entity.QBook;
 import com.library.entity.QBookImage;
@@ -81,6 +79,37 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom{
         long total = results.getTotal();
 
         return new PageImpl<>(content, pageable, total);  //페이지 인터페이스는 객체 생성 못한다
+    }
+
+    //메인 페이지
+    @Override
+    public Page<MainBookDto> getMainBookPage(Pageable pageable) {
+        QBook book = QBook.book;
+        QBookImage bookImage = QBookImage.bookImage;
+
+        QueryResults<MainBookDto> results = this.queryFactory
+                .select(
+                        new QMainBookDto(
+                        book.bookId,
+                        book.bookName,
+                        book.author,
+                        bookImage.imageUrl,
+                        book.bookPublisher,
+                        book.publishingDate,
+                        book.description)
+                )
+                .from(bookImage)
+                .join(bookImage.book, book)
+                .where(bookImage.repImageYesNo.eq("Y"))
+                .orderBy(book.bookId.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<MainBookDto> content = results.getResults();
+        long total = results.getTotal();
+
+        return new PageImpl<>(content, pageable, total);
     }
 
     //BooleanExpression 타입은 QueryDSL에서 사용하는 논리식을 나타내는 타입으로, 이를 활용하면 복잡한 쿼리를 간결하고 직관적으로 작성할 수 있습니다.

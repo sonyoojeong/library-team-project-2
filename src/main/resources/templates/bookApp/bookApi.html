@@ -203,7 +203,7 @@
 -->
 <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--시작-->
-<div class="content" layout:fragment="content">
+<div class="content" layout:fragment="content" style="margin: 0 50px;">
     <!--<form><br/> 폼으로 감싸면 값이 안넘어감-->
 
     <p class="h2">
@@ -231,13 +231,13 @@
                         <input type="checkbox" id="allCheckBox" onclick="allChecked()">
                     </label>
                 </th>
-                <td align="center">책표지</td>
-                <td align="center">책이름</td>
-                <td align="center">저자</td>
-                <td align="center">출판사</td>
-                <td align="center">출판년도</td>
-                <td align="center">가격</td>
-                <td align="center">ISBN</td>
+                <td style="vertical-align: middle;">책표지</td>
+                <td style="vertical-align: middle;">책이름</td>
+                <td style="vertical-align: middle;">저자</td>
+                <td style="vertical-align: middle;">출판사</td>
+                <td style="vertical-align: middle;">출판년도</td>
+                <td style="vertical-align: middle;">가격</td>
+                <td style="vertical-align: middle;">ISBN</td>
             </tr>
         </thead>
         <tbody>
@@ -245,15 +245,15 @@
                 <td style="vertical-align: middle;">
                     <input type="checkbox" name="chk" class="chk checkbox-inline" onclick="chkClicked()">
                 </td>
-                <td><img th:src="${form.image}" width="100"></td>
+                <td width="100px"><img th:src="${form.image}" width="100"></td>
                 <td align="left" style="vertical-align: middle;"><a th:href="${form.link}" target='_blank'>[[${form.title}]]</a></td>
-                <td align="center" style="vertical-align: middle;" th:text="${form.author}"></td>
-                <td align="center" style="vertical-align: middle;" th:text="${form.publisher}"></td>
-                <td align="center" style="vertical-align: middle;" th:text="${form.pubdate}"></td>
-                <td align="center" style="vertical-align: middle;" th:text="${form.discount}"></td>
-                <td align="center" style="vertical-align: middle;" th:text="${form.isbn}"></td>
-                <td align="center" style="vertical-align: middle; display:none;" th:text="${form.link}"></td>
-                <td align="center" style="vertical-align: middle; display:none;" th:text="${form.image}"></td>
+                <td align="left" style="vertical-align: middle;" width="150px" th:text="${form.author}"></td>
+                <td align="left" style="vertical-align: middle;" width="150px" th:text="${form.publisher}"></td>
+                <td align="left" style="vertical-align: middle;" width="150px" th:text="${form.pubdate}"></td>
+                <td align="left" style="vertical-align: middle;" width="100px" th:text="${form.discount}"></td>
+                <td align="left" style="vertical-align: middle;" th:text="${form.isbn}"></td>
+                <td align="left" style="vertical-align: middle; display:none;" th:text="${form.link}"></td>
+                <td align="left" style="vertical-align: middle; display:none;" th:text="${form.image}"></td>
 
             </tr>
         </tbody>

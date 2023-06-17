@@ -390,6 +390,13 @@
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
         }
+        .textarea {
+          border: none;
+          resize: none;
+          height: 200px;
+          display: flex;
+          align-items: center;
+        }
     </style>
 </th:block>
 
@@ -409,7 +416,7 @@
 -->
 <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--시작-->
-<div class="content" layout:fragment="content">
+<div class="content" layout:fragment="content" style="margin: 0 50px;">
     <p class="h2">
         &nbsp;&nbsp;&nbsp;&nbsp;희망도서신청목록
     </p><br/><br/>
@@ -444,16 +451,16 @@
                         <input type="checkbox" id="allCheckBox" onclick="allChecked()">
                     </label>
                 </th>
-                <td>번호</td>
-                <td>책표지</td>
-                <td>희망도서명</td>
-                <td>출판사</td>
-                <td>저자</td>
-                <td>발행일</td>
-                <td>신청일</td>
-                <td>신청상태</td>
-                <td>신청사유</td>
-                <td>검토의견</td>
+                <td style="vertical-align: middle;">번호</td>
+                <td style="vertical-align: middle;">책표지</td>
+                <td style="vertical-align: middle;">희망도서명</td>
+                <td style="vertical-align: middle;">출판사</td>
+                <td style="vertical-align: middle;">저자</td>
+                <td style="vertical-align: middle;">발행일</td>
+                <td style="vertical-align: middle;">신청일</td>
+                <td style="vertical-align: middle;">신청상태</td>
+                <td style="vertical-align: middle;">신청사유</td>
+                <td style="vertical-align: middle;">검토의견</td>
             </tr>
         </thead>
         <tbody>
@@ -472,7 +479,7 @@
                     <!--4.출판사-->
                     <td th:text="${form.bookPublisher}"  id="bookPublisher" height="50px" width="150px" style="vertical-align: middle;"></td>
                     <!--5.저자-->
-                    <td th:text="${form.author}" id="author"  height="50px"style="vertical-align: middle;"></td>
+                    <td th:text="${form.author}" id="author"  height="50px" style="vertical-align: middle;"></td>
                     <!--6.발행일-->
                     <td width="200px" height="50px" th:text="${form.publishingDate}" style="vertical-align: middle;"></td>
                     <!--7.신청일-->
@@ -483,19 +490,19 @@
                     <td width="250px"  height="50px"th:text="${form.aplyReason}" style="vertical-align: middle;"></td>
                     <!--10.검토의견-->
                     <td width="350px">
-                        <textarea class="form-control" type="text" th:value="${form.rvwOpnn}" th:text="${form.rvwOpnn}"
+                        <textarea class="form-control textarea" type="text" th:value="${form.rvwOpnn}" th:text="${form.rvwOpnn}"
                                   th:readonly="${form.aplyStts eq '1' ? false :'readonly'}"
                         ></textarea>
                     </td>
                     <!--11.신청상태코드(히든)-->
-                    <td><input type="hidden" th:value="${form.aplyStts}"/></td>
-                    <td><input type="hidden" th:value="${form.image}"/></td>
-                    <td><input type="hidden" th:value="${form.link}"/></td>
-                    <td><input type="hidden" th:value="${form.bookName}"/></td>
-                    <td><input type="hidden" th:value="${form.bookPublisher}"/></td>
-                    <td><input type="hidden" th:value="${form.author}"/></td>
-                    <td><input type="hidden" th:value="${form.publishingDate}"/></td>
-                    <td><input type="hidden" th:value="${form.isbn}"/></td>
+                    <td style="display: none;"><input type="hidden" th:value="${form.aplyStts}"/></td>
+                    <td style="display: none;"><input type="hidden" th:value="${form.image}"/></td>
+                    <td style="display: none;"><input type="hidden" th:value="${form.link}"/></td>
+                    <td style="display: none;"><input type="hidden" th:value="${form.bookName}"/></td>
+                    <td style="display: none;"><input type="hidden" th:value="${form.bookPublisher}"/></td>
+                    <td style="display: none;"><input type="hidden" th:value="${form.author}"/></td>
+                    <td style="display: none;"><input type="hidden" th:value="${form.publishingDate}"/></td>
+                    <td style="display: none;"><input type="hidden" th:value="${form.isbn}"/></td>
                 </tr>
             </form>
         </tbody>

@@ -17,7 +17,7 @@ public class LikeBook extends SaveBy{
 
     private int count; // 구매 개수
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "like_id")
     private Like like;
 

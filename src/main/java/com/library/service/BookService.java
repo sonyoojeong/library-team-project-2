@@ -1,9 +1,6 @@
 package com.library.service;
 
-import com.library.dto.BookDto;
-import com.library.dto.BookImageDto;
-import com.library.dto.BookListDto;
-import com.library.dto.BookSearchDto;
+import com.library.dto.*;
 import com.library.entity.Book;
 import com.library.entity.BookImage;
 import com.library.mapper.BookMapperInterface;
@@ -133,4 +130,8 @@ public class BookService {
         bookRepository.deleteById(bookId);
     }
 
+    //메인 페이지(전체 사용자용)
+    public Page<MainBookDto> getMainBookPage(Pageable pageable){
+        return bookRepository.getMainBookPage(pageable);
+    }
 }

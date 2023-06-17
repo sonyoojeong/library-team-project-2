@@ -18,21 +18,21 @@ import java.util.List;
 public class BoardController {
     private final BoardService boardService ;
 
-    @GetMapping(value = "/list")
+    @GetMapping(value = "/notice")
     public String SelectAll(Model model){
         List<Board> boardList = boardService.SelectAll() ;
         model.addAttribute("list", boardList) ;
-        return "/board/boardList";
+        return "/board/notice";
     }
 
-    @GetMapping(value = "/insert")
+    @GetMapping(value = "/noticeInsert")
     public String doGetInsert(Model model){
         System.out.println("게시물 등록");
         model.addAttribute("board", new Board()) ;
-        return "/board/boardInsert";
+        return "/board/noticeInsert";
     }
 
-    @PostMapping(value = "/insert")
+    @PostMapping(value = "/noticeInsert")
     public String doPostInsert(Board board){
         System.out.println("board : " + board);
         int cnt = -999 ;
@@ -40,35 +40,35 @@ public class BoardController {
         System.out.println("cnt : " + cnt);
 
         if(cnt == 1){
-            return "redirect:/board/list";
+            return "redirect:/board/noticeInsert";
         }else{
-            return "/board/boardInsert";
+            return "/board/noticeInsert";
         }
     }
 
-    @GetMapping(value = "/detail/{no}")
+    @GetMapping(value = "/details/{no}")
     public String SelectOne(@PathVariable("no") Integer no, Model model){ // 상세 보기
         Board board = boardService.SelectOne(no) ;
         model.addAttribute("board", board) ;
-        return "/board/boardDetail" ;
+        return "/board/boardDetails" ;
     }
 
     // get 방식으로 해당 폼으로 이동하기
-    @GetMapping(value = "/update/{no}") // 수정하기
+    @GetMapping(value = "/updates/{no}") // 수정하기
     public String doGetUpdate(@PathVariable("no") Integer no, Model model){
         Board board = boardService.SelectOne(no) ;
         model.addAttribute("board", board) ;
-        return "/board/boardUpdate" ;
+        return "/board/boardUpdates" ;
     }
 
-    @GetMapping(value = "/delete/{no}")
+    @GetMapping(value = "/deletes/{no}")
     public String Delete(@PathVariable("no") Integer no){ // 삭제하기
         int cnt = -999 ;
         cnt = boardService.Delete(no) ;
-        return "redirect:/board/list" ;
+        return "redirect:/board/notice" ;
     }
 
-    @PostMapping(value = "/update")
+    @PostMapping(value = "/updates")
     public String doPostUpdate(Board board){ // 폼 양식 수정하고 수정 버튼 클릭
         // @Valid를 사용하여 유효성 검사도 하면 좋습니다.
         System.out.println("board : " + board);
@@ -77,9 +77,9 @@ public class BoardController {
         System.out.println("cnt : " + cnt);
 
         if(cnt == 1){
-            return "redirect:/board/list";
+            return "redirect:/board/notice";
         }else{
-            return "/board/boardUpdate";
+            return "/board/boardUpdates";
         }
     }
 }
