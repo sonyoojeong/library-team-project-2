@@ -21,6 +21,7 @@ public class Like {
     private Member member;
 
 
+    
     //회원하고 연동해주는 creatLike 메서드 생성
     public static Like CreateLike(Member member){
         Like like = new Like();

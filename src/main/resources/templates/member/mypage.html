@@ -17,7 +17,16 @@
             padding: 8px;
         }
     </style>
-
+    <script>
+   $(document).ready(function() {
+      $(".deleteBtn").on("click", function(event) {
+            var confirmDelete = confirm('회원을 탈퇴 하시겠습니까?');
+            if (!confirmDelete) {
+              event.preventDefault();
+            }
+      });
+   });
+</script>
 
 
 </head>
@@ -41,6 +50,9 @@
                 <tr>
                     <td><p th:if="${not #lists.isEmpty(myPageDto)}"> <span th:text="${myPageDto[0].name}"></span></p></td>
                 </tr>
+                <tr th:if="${not #lists.isEmpty(myPageDto)}" class="deleteBtn">
+                    <td><a th:href="@{'/members/member/delete/' + ${myPageDto[0].memberId}}">회원 탈퇴</a></td>
+                </tr>
                 </tbody>
             </table>
             <br><br>
@@ -50,37 +62,32 @@
                 <tr>
                     <th>책이름</th>
                     <th>ISBN</th>
-                    <th>대출권수</th>
+                    <th>대여권수</th>
                     <th>대출상태</th>
                     <th>대출일자</th>
-                    <th>반납일자</th>
+                    <th>반납예정일자</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody th:if="${not #lists.isEmpty(myPageDto)}">
                 <tr th:each="dto : ${myPageDto}">
                     <td th:text="${dto.bookName}"></td>
                     <td th:text="${dto.isbn}"></td>
                     <td th:text="${dto.count}"></td>
                     <td th:text="${dto.rentStatus}"></td>
                     <td th:text="${#temporals.format(dto.startDate, 'yyyy:MM:dd')}"></td>
-                    <td th:text="${#temporals.format(dto.returnDate, 'yyyy:MM:dd')}"></td>
+                    <td th:text="${#temporals.format(dto.expectedReturnDate, 'yyyy:MM:dd')}"></td>
+                      
+                </tr>
+                </tbody>
+                <tbody th:unless="${not #lists.isEmpty(myPageDto)}">
+                <tr>
+                    <td colspan="6">대여한 항목이 없습니다.</td>
                 </tr>
                 </tbody>
             </table>
-            <table>
-                <thead>
-                <th>총 대여권수</th>
 
-                </thead>
-                <tbody>
-                <!--        <tr th:each="dto : ${myPageDto}">
-                            <td>
-                                <span th:text="${#numbers.formatDecimal(dto.rentBook.count.sum())}"></span>
-                            </td>
-                        </tr>-->
-                </tbody>
-            </table>
         </div>
     </form>
+
 </div>
 </html>
