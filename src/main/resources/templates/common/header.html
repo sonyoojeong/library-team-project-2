@@ -7,7 +7,7 @@
 
 <body class="hero-anime">
 <div class="header" th:fragment="asdf">
-    <div class="navigation-wrap bg-light start-header start-style">
+    <div class="navigation-wrap bg-light  start-style">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -16,7 +16,7 @@
                         <a class="navbar-brand" href="/"><script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
 
-                            <lottie-player src="https://lottie.host/28927f1d-042c-4d16-8c09-12bc1fc18f4a/rqyRb7FbY4.json" background="transparent" speed="1" style="width: 165px; height: 165px;" loop autoplay></lottie-player></a>   <!--target="_blank" 속성 값 사용 가능-->
+                            <lottie-player src="https://lottie.host/28927f1d-042c-4d16-8c09-12bc1fc18f4a/rqyRb7FbY4.json" background="transparent" speed="1" style="width: 135px; height: 165px;" loop autoplay></lottie-player></a>   <!--target="_blank" 속성 값 사용 가능-->
 
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
@@ -33,11 +33,19 @@
                                         <a class="dropdown-item" href="#">Another action</a>
                                     </div>
                                 </li>
+                            <ul class="navbar-nav ml-auto py-4 py-md-0">
+                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4"> <!-- active 속성 값 사용 가능 -->
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">희망도서</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/library/hopeBookApp">희망도서신청</a>
+                                        <a class="dropdown-item" href="/library/hopeBookAppList">희망도서목록조회</a>
+                                    </div>
+                                </li>
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
                                     <a class="nav-link" href="/map">찾아오시는길</a>
                                 </li>
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="#">Agency</a>
+                                    <a class="nav-link" href="/board/notice/">공지사항</a>
                                 </li>
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" sec:authorize="isAuthenticated()">MyPage</a>
@@ -66,6 +74,10 @@
                                 </li>
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4" sec:authorize="isAnonymous()">
                                     <a class="nav-link" href="/members/sign_up">회원가입</a>
+                                </li>
+                                &nbsp;   &nbsp;
+                                <li class="nav-item" sec:authorize="isAuthenticated()">
+                                    <a class="nav-link" href="/members/update">회원정보 수정</a>
                                 </li>
 
 

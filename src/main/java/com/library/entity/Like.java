@@ -19,9 +19,6 @@ public class Like {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-    
-    @OneToMany(mappedBy = "like", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LikeBook> likeBooks = new ArrayList<>();
 
 
     

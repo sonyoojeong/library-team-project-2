@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/mylayout}" xmlns="http://www.w3.org/1999/html">
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:inline="javascript">
+
+     // 화면 오픈했을때 무조건 실행된다.
+     $(document).ready(function(){
+
+        // 검색 버튼 클릭했을때
+        $("#searchBtn").on("click", function(){
+
+            // 입력된 값을 변수에 담아준다.
+            var searchData = $("#searchData").val();
+
+            // 담아준 데이터를 서버로 보낸다.
+            // replaceAll (찾을 문자, 바꿀 문자)
+            searchData = searchData.replaceAll(' ','');
+
+            if(searchData == '' || searchData == null || searchData == undefined ){
+                alert('도서명 또는 저자명을 입력해야 도서 검색이 가능합니다.')
+                return false;
+            }
+
+            var currentDate = $("#currentDate").val();
+            var phone = $("#phone").val();
+            var email = $("#email").val();
+
+
+               location.href="/library/bookApi"
+              + "?currentDate=" + currentDate
+              + "&phone=" + phone
+              + "&email=" + email
+              + "&bookName=" + searchData
+              ;
+        });
+
+
+        // 선택버튼 클릭했을때
+        $(".selectBookBtn").on("click",function(){
+            // 체크된 태그들을 담은 변수
+            var checkbox = $("input[name=chk]:checked");
+            console.log('체크된 태그의 길이: ' + checkbox.length);
+
+            // 체크된 로우의 길이가 1보다 작으면 알러트창 띄우기
+            if(checkbox.length < 1){
+                alert('희망 도서를 선택해주세요.');
+                return false;
+            }else if(checkbox.length > 1){
+                alert('희망 도서는 1개만 선택이 가능합니다.');
+                return false;
+            }
+
+            var tr = checkbox.parent().parent().eq(0);
+            var td = tr.children();
+
+            var title       = td.eq(2).text(); // 책이름
+            var author      = td.eq(3).text(); // 저자
+            var publisher   = td.eq(4).text(); // 출판사
+            var pubdate     = td.eq(5).text(); // 출판년도
+            var discount    = td.eq(6).text(); // 가격
+            var isbn        = td.eq(7).text(); // isbn
+            var link     = td.eq(8).text(); // link
+            var image     = td.eq(9).text(); // image
+        // 가격이 "판매불가(단종)"이면 선택이 불가합니다 알러트 띄우기.
+        if(discount == "판매불가(단종)"){
+            alert('해당 도서는 판매불가 상품이므로 선택이 불가합니다.');
+            return false;
+        }
+
+        var currentDate = $('#currentDate').val();
+        var phone = $('#phone').val();
+        var email = $('#email').val();
+
+        location.href="/library/backToBookAppForm"
+        +'?currentDate=' + currentDate
+        +'&phone=' + phone
+        +'&email=' + email
+        +'&title=' + title
+        +'&author=' + author
+        +'&publisher=' + publisher
+        +'&pubdate=' + pubdate
+        +'&discount=' + discount
+        +'&isbn=' + isbn
+        +'&link=' + link
+        +'&image=' + image
+        ;
+
+
+
+        }); // 선택버튼클릭 했을때 끝
+
+     }); // 화면로드했을때 끝
+
+     /**
+     * page() 함수
+     */
+     function page(page){
+        // 입력된 값을 변수에 담아준다.
+        var searchData = $("#searchData").val();
+        var currentDate = $("#currentDate").val();
+        var phone = $("#phone").val();
+        var email = $("#email").val();
+
+           location.href="/library/bookApi/"+ page
+          + "?currentDate=" + currentDate
+          + "&phone=" + phone
+          + "&email=" + email
+          + "&bookName=" + searchData
+          ;
+
+    }
+        /*******************************
+         * 체크박스 전체 선택 클릭 메서드
+         *******************************/
+        function allChecked(target){
+
+            //전체 체크박스 버튼
+            const checkbox = document.getElementById('allCheckBox');
+
+            //전체 체크박스 버튼 체크 여부
+            const is_checked = checkbox.checked;
+
+            //전체 체크박스 제외한 모든 체크박스
+            if(is_checked){
+                //체크박스 전체 체크
+                chkAllChecked()
+            }
+
+            else{
+                //체크박스 전체 해제
+                chkAllUnChecked()
+            }
+        }
+
+        //자식 체크박스 클릭 이벤트
+        function chkClicked(){
+
+            //체크박스 전체개수
+            const allCount = document.querySelectorAll(".chk").length;
+
+            //체크된 체크박스 전체개수
+            const query = 'input[name="chk"]:checked'
+            const selectedElements = document.querySelectorAll(query)
+            const selectedElementsCnt = selectedElements.length;
+
+            //체크박스 전체개수와 체크된 체크박스 전체개수가 같으면 전체 체크박스 체크
+            if(allCount == selectedElementsCnt){
+                 document.getElementById('allCheckBox').checked = true;
+            }
+
+            //같지않으면 전체 체크박스 해제
+            else{
+                document.getElementById('allCheckBox').checked = false;
+            }
+        }
+
+        //체크박스 전체 체크
+        function chkAllChecked(){
+            document.querySelectorAll(".chk").forEach(function(v, i) {
+                v.checked = true;
+            });
+        }
+
+        //체크박스 전체 체크 해제
+        function chkAllUnChecked(){
+            document.querySelectorAll(".chk").forEach(function(v, i) {
+                v.checked = false;
+            });
+        }
+
+    </script>
+</th:block>
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        select{
+            margin-right:10px;
+        }
+    </style>
+</th:block>
+
+
+<!--
+    [희망도서신청목록내역 화면]
+    1. 검색
+        검색조건 1) SELECT BOX (1.책이름 2.저자 3.출판사 )
+        검색조건 2) TEXT (텍스트)
+    2. 조회 그리드(테이블/리스트)
+        컬럼 0) CHECK BOX (선택유무)
+        컬럼 1) 게시글 순번(PK아님)(숨김)
+        컬럼 2) 책표지
+        컬럼 3) 책이름
+        컬럼 4) 저자
+        컬럼 5) 출판사
+        컬럼 6) 출판년도
+        컬럼 7) 가격
+        컬럼 8) ISBN
+-->
+<!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--시작-->
+<div class="content" layout:fragment="content" style="margin: 0 50px;">
+    <!--<form><br/> 폼으로 감싸면 값이 안넘어감-->
+
+    <p class="h2">
+        희망도서찾기(네이버 도서 API)
+    </p><br/><br/>
+<!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+    <!-- 1.도서 API  검색 박스 -->
+    <!-- /* 필드 검색 */ -->
+    <!--<form th:action="@{'/admin/products/' + ${products.number}}" role="form" method="get" th:object="${products}">-->
+        <div class="form-inline justify-content-center" >
+            <label>도서명/저자명</label>&nbsp;&nbsp;
+            <!--<input th:field="*{searchQuery}" class="form-control" type="text" placeholder="검색어를 입력해주세요.">-->
+            <input id="searchData" class="form-control" type="text" placeholder="검색어를 입력해주세요." th:value="${bookName}">
+            <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>&nbsp;&nbsp;
+            <button type="button" class="btn btn-primary selectBookBtn" >도서 선택</button>
+        </div>
+    <!--</form>-->
+    <br>
+    <!-- 2.도서 API 목록 그리드 -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="allCheckBox" onclick="allChecked()">
+                    </label>
+                </th>
+                <td style="vertical-align: middle;">책표지</td>
+                <td style="vertical-align: middle;">책이름</td>
+                <td style="vertical-align: middle;">저자</td>
+                <td style="vertical-align: middle;">출판사</td>
+                <td style="vertical-align: middle;">출판년도</td>
+                <td style="vertical-align: middle;">가격</td>
+                <td style="vertical-align: middle;">ISBN</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="form, status: ${books}">
+                <td style="vertical-align: middle;">
+                    <input type="checkbox" name="chk" class="chk checkbox-inline" onclick="chkClicked()">
+                </td>
+                <td width="100px"><img th:src="${form.image}" width="100"></td>
+                <td align="left" style="vertical-align: middle;"><a th:href="${form.link}" target='_blank'>[[${form.title}]]</a></td>
+                <td align="left" style="vertical-align: middle;" width="150px" th:text="${form.author}"></td>
+                <td align="left" style="vertical-align: middle;" width="150px" th:text="${form.publisher}"></td>
+                <td align="left" style="vertical-align: middle;" width="150px" th:text="${form.pubdate}"></td>
+                <td align="left" style="vertical-align: middle;" width="100px" th:text="${form.discount}"></td>
+                <td align="left" style="vertical-align: middle;" th:text="${form.isbn}"></td>
+                <td align="left" style="vertical-align: middle; display:none;" th:text="${form.link}"></td>
+                <td align="left" style="vertical-align: middle; display:none;" th:text="${form.image}"></td>
+
+            </tr>
+        </tbody>
+    </table>
+
+    <a th:classappend="${nextPage=='N'} ?'disabled'" th:onclick="'javascript:page(' + ${presentPageNumber} + ')'" aria-label='다음' class="page-link">
+        <span aria-hidden='true'>다음</span>
+    </a>
+    <!--</form> 폼으로 감싸면 값이 안넘어감-->
+    <input type="hidden" id="currentDate" th:value="${currentDate}">
+    <input type="hidden" id="phone" th:value="${phone}">
+    <input type="hidden" id="email" th:value="${email}">
+
+</div>
+</html>
