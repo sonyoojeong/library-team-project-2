@@ -18,7 +18,6 @@
                 alert(errorMessage);
             }
             bindDomEvent();
-
         });
 
         function bindDomEvent(){
@@ -35,14 +34,6 @@
                 $(this).siblings(".custom-file-label").html(fileName);
             });
         }
-
-
-
-
-
-
-
-
     </script>
 </th:block>
 
@@ -58,7 +49,7 @@
 
 <div class="content" layout:fragment="content">
   <br><br><br><br>
-  <h3 class="pageTitle">책 수정 페이지</h3>
+  <h3 class="pageTitle">책 등록 페이지</h3>
 
   <!--enctype="multipart/form-data" 는 이미지 업로드를 위한 구문-->
   <form action="/admin/books/new" method="post" role="form" th:object="${bookDto}" enctype="multipart/form-data">
@@ -173,13 +164,7 @@
     </div>
     <p class="fieldError" th:if="${#fields.hasErrors('width')}" th:errors="*{width}">Invalid Data</p>
 
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <label class="input-group-text px-4">창구번호</label>
-      </div>
-      <input type="text" class="form-control" placeholder="창구번호를 입력해주세요." th:field="*{callNumber}">
-    </div>
-    <p class="fieldError" th:if="${#fields.hasErrors('callNumber')}" th:errors="*{callNumber}">Invalid Data</p>
+
 
     <div class="input-group mb-3">
       <div class="input-group-prepend">
@@ -191,26 +176,20 @@
       </select>
     </div>
 
-    <div th:if="${not #lists.isEmpty(bookDto.bookImageDtoList)}">
-      <div class="input-group mb-3" th:each="bookImageDto, status: ${bookDto.bookImageDtoList}">
-        <!-- 교재 P.119 참조) <th: each="단수이름, status: ${복수이름} >-->
-
-
-
+    <div th:if="${#lists.isEmpty(bookDto.bookImageDtoList)}">
+      <div class="input-group mb-3" th:each="num: ${#numbers.sequence(1,1)}">
+        <div class="input-group-prepend">
+          <label class="input-group-text px-4" th:text="'상품 이미지' + ${num}"></label>
+        </div>
         <div class="custom-file img-div">
           <input type="file" class="custom-file-input" name="bookImageFile">
-
-          <input type="text" name="bookImageIds" th:value="${bookImageDto.bookImageId}">
-
-          <label class="custom-file-label" th:text="${not #strings.isEmpty(bookImageDto.originalImageName)} ? ${bookImageDto.originalImageName} : '상품 이미지' + ${status.count}"></label>
-          <!-- 교재 P.119 참조) status.count : 1번부터 시작할 때, status.index : 0번 부터 시작할 때-->
+          <label class="custom-file-label" th:text="'상품 이미지' + ${num} + '을(를) 넣어주세요.'"></label>
         </div>
       </div>
     </div>
 
-    <div style="text-align:right" th:if="${not #strings.isEmpty(bookDto.bookId)}">
-      <button th:formaction="@{'/admin/book/' + ${bookDto.bookId}}" type="submit" class="btn btn-primary">책 수정</button>
-
+    <div style="text-align:right" th:if="${#strings.isEmpty(bookDto.bookId)}">
+      <button th:formaction="@{/admin/books/new}" type="submit" class="btn btn-primary">책 등록</button>
     </div>
 
     <!--보안 관련 인증 토큰을 히든 파라미터로 보내는 구문-->
