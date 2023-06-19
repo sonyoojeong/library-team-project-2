@@ -115,7 +115,7 @@ public interface HopeBookAppListMapperInterface {
     int Insert(@Param("hopeBookAppForm") final HopeBookAppForm hopeBookAppForm);
 
     // 도서목록 테이블에 있는 로우를 isbn으로 조회하여 카운트(없으면 : 0, 있으면 : 1) 가져오기
-    @Select("Select count(*) from BOOKS where isbn = #{isbn};")
+    @Select("Select count(*) from BOOKS_INFO where isbn = #{isbn};")
     int getIsbnCount(@Param("isbn") String isbn);
 
 
@@ -134,23 +134,19 @@ public interface HopeBookAppListMapperInterface {
     )
     int updateCompleteAppForm(@Param("hopeBookAppSn") int hopeBookAppSn,@Param("rvwOpnn") String rvwOpnn);
 
-    @Insert("INSERT INTO BOOKS(\n" +
-            "    book_id \n" +
-            "\t, isbn \n" +
+    @Insert("INSERT INTO BOOKS_INFO(\n" +
+            "    isbn \n" +
             "\t, author\n" +
             "\t, book_name\n" +
             "\t, book_publisher\n" +
             "\t, publishing_date\n" +
-            "\t, stock\n" +
             "\n" +
             ")VALUES(\n" +
-            "\t  (SELECT BOOK_ID FROM (SELECT IFNULL(MAX(book_id), 0) + 1 AS BOOK_ID FROM BOOKS) AS AA) \n" +
-            "\t, #{isbn}\n" +
+            "\t  #{isbn}\n" +
             "\t, #{author} \n" +
             "\t, #{bookName} \n" +
             "\t, #{bookPublisher} \n" +
             "\t, #{publishingDate} \n" +
-            "\t, 1 \n" +
             ");")
     int InsertBook(@Param("bookName") String bookName, @Param("bookPublisher") String bookPublisher, @Param("author") String author,
                    @Param("publishingDate") String publishingDate, @Param("isbn") String isbn);
