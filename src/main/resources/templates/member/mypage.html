@@ -76,7 +76,7 @@
                     <td th:text="${dto.rentStatus}"></td>
                     <td th:text="${#temporals.format(dto.startDate, 'yyyy:MM:dd')}"></td>
                     <td th:text="${#temporals.format(dto.expectedReturnDate, 'yyyy:MM:dd')}"></td>
-                      
+
                 </tr>
                 </tbody>
                 <tbody th:unless="${not #lists.isEmpty(myPageDto)}">

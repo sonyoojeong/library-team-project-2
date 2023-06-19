@@ -19,7 +19,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom{
 
 
     @Override
-    public List<MyPageDto> getMyPage(String loggedInMemberEmail) {
+    public List<MyPageDto> getMyPage(String username) {
         QMember member = QMember.member;
         QRentBook rentBook = QRentBook.rentBook;
         QRent rent = QRent.rent;
@@ -29,20 +29,21 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom{
         List<MyPageDto> results = this.queryFactory
                 .select(
                         new QMyPageDto(
+                                member.memberId,
                                 member.name,
-                                member.rentCount,
                                 rentBook.book.bookName,
                                 rentBook.book.isbn,
                                 rentBook.count,
                                 rentBook.rent.rentStatus,
                                 rentBook.rent.rentDate,
                                 rentBook.rent.rentDate
+
                         )
                 )
                 .from(rentBook)
                 .join(rentBook.rent, rent)
                 .join(rent.member, member)
-                .where(member.email.isNull().or(member.email.eq(loggedInMemberEmail)).and(rentBook.count.isNotNull())) // 로그인된 멤버의 이메일을 조건으로 추가
+                .where(member.email.eq(username))
                 .orderBy(rent.rentDate.desc())
                 .fetch();
 
@@ -51,4 +52,3 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom{
 
 
 }
-

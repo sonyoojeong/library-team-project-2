@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{common/mylayout}">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/mylayout}">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 
 
@@ -84,9 +84,9 @@
                 <td>
 
 
-                <button type="button">
-                    <a th:href="@{|/admin/books/delete/${bean.bookId}|}">삭제</a>
-                </button>
+                    <button type="button">
+                        <a th:href="@{|/admin/books/delete/${bean.bookId}|}">삭제</a>
+                    </button>
 
                 </td>
 
@@ -97,7 +97,7 @@
         </table>
 
 
-    <script>
+        <script>
         $(document).ready(function() {
             $("td button").on("click", function(event) {
                 var confirmDelete = confirm('선택한 항목을 삭제하시겠습니까?');
@@ -109,7 +109,7 @@
     </script>
 
 
-         <!-- /* 페이지 네이션  */-->
+        <!-- /* 페이지 네이션  */-->
         <div th:with="start=${(books.number/maxPage)*maxPage + 1}, end=(${(books.totalPages == 0) ? 1 : (start + (maxPage - 1) < books.totalPages ? start + (maxPage - 1) : books.totalPages)})" >
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${books.first}?'disabled'">

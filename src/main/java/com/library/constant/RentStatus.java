@@ -1,5 +1,6 @@
 package com.library.constant;
 
 public enum RentStatus {
-    RENT, CANCEL
+    RENT, CANCEL, RETURN
 }
+                        
