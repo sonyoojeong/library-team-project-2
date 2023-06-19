@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{common/mylayout}">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/mylayout}">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 
 
@@ -35,16 +35,6 @@
             + "&searchQuery=" + searchQuery;
         }
 
-        function checkAll(){
-            /*alert('전체 선택 하기');*/
-            /*input 태그에서 [] bookChkBox 네임 속성을 []안에 넣음 */
-            if($('#checkall').prop('checked')){
-                $('input[name="bookChkBox"]').prop('checked',true);
-            }else{
-            $('input[name="bookChkBox"]').prop('checked',false);
-            }
-
-        }
 
 
 
@@ -69,10 +59,8 @@
         <table class="table">
             <thead>
             <tr>
-                <td>
-                    <input type="checkbox" id="checkall" onclick="checkAll()"> 전체 선택
-                </td>
 
+                <td>번호</td>
                 <td>도서명</td>
                 <td>isbn</td>
                 <td>상태</td>
@@ -83,9 +71,7 @@
             </thead>
             <tbody>
             <tr th:each="bean, status:${books.getContent()}">
-                <td class="text-center align-middle">
-                    <input type="checkbox" name="bookChkBox" th:value="${bean.bookId}">
-                </td>
+                <td th:text="${bean.bookId}"></td>
                 <td>
                     <a th:href="'/admin/book/'+ ${bean.bookId}" th:text="${bean.bookName}"></a>
                 </td>
@@ -98,7 +84,7 @@
                 <td>
 
 
-                    <button id="deleteBtn" type="button">
+                    <button type="button">
                         <a th:href="@{|/admin/books/delete/${bean.bookId}|}">삭제</a>
                     </button>
 
@@ -110,78 +96,20 @@
 
         </table>
 
-<script>
-            $(document).ready(function() {
-          $("#deleteBtn").on("click",function(event) {
-                var confirmDelete = confirm('선택한 항목을 삭제하시겠습니까?');
-                if (!confirmDelete) {
-                  event.preventDefault();
-                }
-          });
-        });
-
-</script>
-
-
-       <!--<form th:action="@{'/admin/books/delete/' + ${bookId}}" method="post">-->
-        <h5 class="text-right">
-            <button class="btn btn-primary btn-lg" onclick="deleteBook()">삭제하기</button>
-        </h5>
-
 
         <script>
-             function deleteBook() {
-                var checkList = $('input[name="bookChkBox"]:checked');
-
-                if (checkList.length === 0) {
-                    alert('삭제할 항목을 선택해주세요.');
-                    return;
-                }
-
+        $(document).ready(function() {
+            $("td button").on("click", function(event) {
                 var confirmDelete = confirm('선택한 항목을 삭제하시겠습니까?');
                 if (!confirmDelete) {
-                    return;
+                    event.preventDefault();
                 }
-
-                var dataArray = new Array();
-                var myurl = '/admin/books/checkDelete/';
-
-                checkList.each(function() {
-                    var bookId = $(this).val();
-                    dataArray.push(bookId);
-                });
-
-                var token = $('meta[name="_csrf"]').attr('content');
-                var header = $('meta[name="_csrf_header"]').attr('content');
-
-                for (var i = 0; i < dataArray.length; i++) {
-                    $.ajax({
-                        url: myurl + dataArray[i],
-                        type: 'DELETE',
-                        contentType: 'application/json',
-                        beforeSend: function(xhr) {
-                            xhr.setRequestHeader(header, token);
-                        },
-                        dataType: 'json',
-                        cache: false,
-                        success: function(result, status) {
-                            location.href = '/book/bookAdminList';
-                        },
-                        error: function(xhr, status, error) {
-                            if (xhr.status == '401') {
-                                alert('로그인 이후 이용해 주세요.');
-                                location.href = '/members/login';
-                            } else {
-                                alert(xhr.responseJSON.message);
-                            }
-                        }
-                    });
-                }
-            }
-        </script>
+            });
+        });
+    </script>
 
 
-         <!-- /* 페이지 네이션  */-->
+        <!-- /* 페이지 네이션  */-->
         <div th:with="start=${(books.number/maxPage)*maxPage + 1}, end=(${(books.totalPages == 0) ? 1 : (start + (maxPage - 1) < books.totalPages ? start + (maxPage - 1) : books.totalPages)})" >
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${books.first}?'disabled'">

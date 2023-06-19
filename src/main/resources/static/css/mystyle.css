@@ -627,7 +627,6 @@ html {
  display: flex;
  flex-direction: column;
  max-width: 1400px;
- height: 100vh;
  background-color: var(--page-bg-color);
  margin: 0 auto;
  overflow: hidden;

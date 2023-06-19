@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -19,6 +21,10 @@ public class Like {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "like", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LikeBook> likeBooks = new ArrayList<>();
+
 
 
     //회원하고 연동해주는 creatLike 메서드 생성
