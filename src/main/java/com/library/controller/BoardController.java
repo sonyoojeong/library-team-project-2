@@ -21,7 +21,7 @@ public class BoardController {
     @GetMapping(value = "/notice")
     public String SelectAll(Model model){
         List<Board> boardList = boardService.SelectAll() ;
-        model.addAttribute("list", boardList) ;
+        model.addAttribute("notice", boardList) ;
         return "/board/notice";
     }
 
@@ -40,7 +40,7 @@ public class BoardController {
         System.out.println("cnt : " + cnt);
 
         if(cnt == 1){
-            return "redirect:/board/noticeInsert";
+            return "redirect:/board/notice";
         }else{
             return "/board/noticeInsert";
         }
