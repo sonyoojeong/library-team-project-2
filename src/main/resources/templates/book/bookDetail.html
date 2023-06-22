@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{common/mylayout}">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/mylayout}">
 
 <!-- 보안토큰 -->
 <head>
@@ -15,19 +15,24 @@
 <!-- 사용자 정의 CSS 추가  -->
 <th:block layout:fragment="css">
     <style>
-        .fieldError{color:red; font-size:13pt;}
-    </style>
+        .fieldError{
+            color:red; font-size:13pt;
+        }
 
-    <style>
         .mgb-15{
             margin-bottom:15px;
         }
+
         .mgt-30{
             margin-top:30px;
         }
 
         .mgt-50{
             margin-top:10px;
+            }
+
+        .mgr-10{
+              margin-right:10px;
             }
 
         .repImgDiv{
@@ -157,7 +162,7 @@
         <!-- /* 대표 이미지 영역 */ -->
         <div class="repImgDiv">
             <img class="rounded repImg" th:alt="${dto.bookName}"
-            th:src="${dto.bookImageDtoList[0].imageUrl}" height="20" width="20">   <!--"alt"는 "alternative"의 약어로, 이미지가 로드되지 않았을 때 대신해서 보여줄 대체 텍스트를 의미합니다. -->
+                 th:src="${dto.bookImageDtoList[0].imageUrl}" height="20" width="20">   <!--"alt"는 "alternative"의 약어로, 이미지가 로드되지 않았을 때 대신해서 보여줄 대체 텍스트를 의미합니다. -->
             <!--"src"는 "source"의 약어로, 이미지 파일의 경로나 URL을 의미합니다.  -->
 
         </div>
@@ -167,7 +172,7 @@
             <span class="badge badge-primary mgb-15" th:if="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
                 대여가능
             </span>
-                        <span class="badge badge-danger mgb-15" th:unless="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
+            <span class="badge badge-danger mgb-15" th:unless="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
                 대여불가
             </span>
             <div class="h4" th:text="${dto.bookName}"></div>
@@ -176,22 +181,45 @@
             <hr class="my-4">
             <div class="text-right">
 
-                <div class="text-left mgt-50">
-                    <h5 style="display: inline-block;">isbn :</h5>
-                    <h3 name="isbn" id="isbn" class="font-weight-bold" style="display: inline-block; margin-left: 10px;" th:text="${dto.isbn}"></h3>
-                </div>
-
-
-                <div class="text-left mgt-50">
-                    <h5 style="display: inline-block;">재고 :</h5>
-                    <h3 name="stock" id="stock" class="font-weight-bold" style="display: inline-block; margin-left: 10px;" th:text="${dto.stock}">권</h3>
-                </div>
-
-
-                    <!-- span쪽은 사용자에게 보여줄 때 콤마가 보여지게끔 뜨는 것, 위에 input 내부적인-->
-                <div class="text-left mgt-50">
-                    <h5 style="display: inline-block;">출판사 :</h5>
-                    <h3 name="bookPublisher" id="bookPublisher" class="font-weight-bold" style="display: inline-block; margin-left: 10px;" th:text="${dto.bookPublisher}"></h3>
+                <div>
+                    <table>
+                        <tr>
+                            <th>isbn</th>
+                            <td name="isbn" id="isbn" th:text="${dto.isbn}"></td>
+                        </tr>
+                        <tr>
+                            <th>저자</th>
+                            <td th:text="${dto.author}"></td>
+                        </tr>
+                        <tr>
+                            <th>출판사</th>
+                            <td th:text="${dto.bookPublisher}"></td>
+                        </tr>
+                        <tr>
+                            <th>출판일</th>
+                            <td th:text="${dto.publishingDate}"></td>
+                        </tr>
+                        <tr>
+                            <th>재고</th>
+                            <td th:text="${dto.stock}"></td>
+                        </tr>
+                        <tr>
+                            <th>페이지</th>
+                            <td th:text="${dto.page} + ' p'"></td>
+                        </tr>
+                        <tr>
+                            <th>무게</th>
+                            <td th:text="${dto.weight} + ' g'"></td>
+                        </tr>
+                        <tr>
+                            <th>규격</th>
+                            <td th:text="${dto.hor} + '*' + ${dto.ver} + '*' + ${dto.width}"></td>
+                        </tr>
+                        <tr>
+                            <th>재고</th>
+                            <td th:text="${dto.stock} + ' 권'"></td>
+                        </tr>
+                    </table>
                 </div>
 
 
@@ -200,9 +228,9 @@
                     <div class="input-group prepend">
                         <span class="input-group-text">수량</span>
 
-                    <input type="number" name="count" id="count" class="form-control" value="1" min="1">
+                        <input type="number" name="count" id="count" class="form-control" value="1" min="1">
+                    </div>
                 </div>
-            </div>
             </div>
 
 
@@ -212,35 +240,45 @@
             <!--얇은 선은 hr 태그 사용하면 된다-->
             <hr class="my-4">
 
-     <div class="text-right"
-                 th:if="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
-                <button type="button" class="btn btn-light border-primary btn-lg" onclick="addLike()">관심목록 추가</button>
-                <button type="button" class="btn btn-primary btn-lg" onclick="rent()">대여하기</button>
+
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-light border-primary btn-lg" onclick="addLike()">관심</button>
+                <div class="text-right" th:if="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE}">
+                    <button type="button" class="btn btn-primary btn-lg" onclick="rent()">대여하기</button>
+                </div>
+                <div class="text-right" th:unless="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE}">
+                    <button type="button" class="btn btn-secondary btn-lg" onclick="noRent()">대출중</button>
+                    =======
+                    <div class="text-right"
+                         th:if="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
+                        <button type="button" class="btn btn-light border-primary btn-lg" onclick="addLike()">관심목록 추가</button>
+                        <button type="button" class="btn btn-primary btn-lg" onclick="rent()">대여하기</button>
+                    </div>
+                    <div class="text-right"
+                         th:unless="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
+                        <button type="button" class="btn btn-light border-primary btn-lg" onclick="addLike()">관심목록 추가</button>
+                        <button type="button" class="btn btn-danger btn-lg" onclick="noRent()">대출중</button>
+                        >>>>>>> main
+
+                        <!--btn-lg << lg는 large-->
+                    </div>
+                </div>
             </div>
-            <div class="text-right"
-                 th:unless="${dto.bookRentalStatus == T(com.library.constant.BookRentalStatus).POSSIBLE && dto.stock > 0}">
-                <button type="button" class="btn btn-light border-primary btn-lg" onclick="addLike()">관심목록 추가</button>
-                <button type="button" class="btn btn-danger btn-lg" onclick="noRent()">대출중</button>
 
-                <!--btn-lg << lg는 large-->
+            <div class="jumbotron jumbotron-fluid mgt-30">
+                <div class="container">
+                    <h4 class="display-5">책 내용 설명</h4>
+                    <hr class="my-4">
+                    <p class="lead" th:text="${dto.description}"></p>
+                </div>
             </div>
+
+            <div class="text-center" th:each="bookImage : ${dto.bookImageDtoList}">
+                <img th:if="${not #strings.isEmpty(bookImage.imageUrl)}" th:src="${bookImage.imageUrl}"
+                     class="rounded mgb-15" width="500" height="350">
+            </div>
+
         </div>
-    </div>
-
-    <div class="jumbotron jumbotron-fluid mgt-30">
-        <div class="container">
-            <h4 class="display-5">책 내용 설명</h4>
-            <hr class="my-4">
-            <p class="lead" th:text="${dto.description}"></p>
-        </div>
-    </div>
-
-    <div class="text-center" th:each="bookImage : ${dto.bookImageDtoList}">
-        <img th:if="${not #strings.isEmpty(bookImage.imageUrl)}" th:src="${bookImage.imageUrl}"
-            class="rounded mgb-15" width="500" height="350">
-    </div>
-
-</div>
 
 
 

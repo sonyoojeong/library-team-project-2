@@ -96,8 +96,8 @@
       <td>작성자</td>
       <td>제목</td>
       <td>내용</td>
-      <td>등록일</td>
-      <td>파일</td>
+<!--      <td>등록일</td>-->
+<!--      <td>파일</td>-->
       <td>수정</td>
       <td>삭제</td>
     </tr>
@@ -110,23 +110,23 @@
       </td>
       <td th:text="${bean.subject}"></td>
       <td th:text="${bean.description}"></td>
-      <td th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></td>
+<!--      <td th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></td>-->
 
-      <td>
-        <a th:href="@{'/library/board/'+${bean.fileName}}" download>
-          <!--          <button type="button"  onclick="alert('다운로드할까요..?')">-->
-          <!--            <img src="/library/board/images/download-btn.png" width="30px;" height="20px;"/>-->
-          <!--          </button>-->
-          <button class="btn" id="btn" type="submit" onclick="alert('다운로드..?')">
-            <img class="btn-img" src="https://tinyurl.com/266vaxnu" width="30px;" height="30px;"></button>
-        </a>
-      </td>
+<!--      <td>-->
+<!--        <a th:href="@{'/library/board/'+${fileName}}" download>-->
+<!--          &lt;!&ndash;          <button type="button"  onclick="alert('다운로드할까요..?')">&ndash;&gt;-->
+<!--          &lt;!&ndash;            <img src="/library/board/images/download-btn.png" width="30px;" height="20px;"/>&ndash;&gt;-->
+<!--          &lt;!&ndash;          </button>&ndash;&gt;-->
+<!--          <button class="btn" id="btn" type="submit" onclick="alert('다운로드..?')">-->
+<!--            <img class="btn-img" src="https://tinyurl.com/266vaxnu" width="30px;" height="30px;"></button>-->
+<!--        </a>-->
+<!--      </td>-->
 
       <td>
         <a th:href="'/board/updates/'+${bean.no}" th:text="수정"></a>
       </td>
       <td>
-        <a th:href="'/board/details/'+${bean.no}" th:text="삭제"></a>
+        <a th:href="'/board/deletes/'+${bean.no}" th:text="삭제"></a>
       </td>
     </tr>
     </tbody>

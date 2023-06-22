@@ -88,8 +88,8 @@ public class MemberService implements UserDetailsService {
 
     }
 
-    public List<MyPageDto> getMyPage(String loggedInMemberEmail){
-        return memberRepository.getMyPage(loggedInMemberEmail);
+    public List<MyPageDto> getMyPage(String email){
+        return memberRepository.getMyPage(email);
     }
 
 
